@@ -1,0 +1,1454 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Marco Brandfer - Official Web App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-neutral-950 text-neutral-100 font-sans selection:bg-red-600 selection:text-white pb-12">
+
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    // Componente da Loja de Camisetas (WhatsApp Integration)
+    function CamisetaSection() {
+      const [tamanho, setTamanho] = useState("G");
+      const [quantidade, setQuantidade] = useState(1);
+      const numeroWhatsApp = "5543988043776";
+
+      const handleComprarZap = () => {
+        const qtd = quantidade || 1;
+        const mensagem = `Olá Equipe Marco Brandfer, eu gostaria de adquirir (${qtd}) camiseta tamanho (${tamanho})`;
+        const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensagem)}`;
+        window.open(url, '_blank');
+      };
+
+      const tamanhos = ['P', 'M', 'G', 'GG', 'XGG'];
+
+      return (
+        <section className="max-w-5xl mx-auto my-12 px-4">
+          <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 md:p-8 shadow-2xl flex flex-col md:flex-row items-center gap-8">
+            
+            {/* Imagem do Produto */}
+            <div className="w-full md:w-1/2 text-center">
+              <img 
+                src="images/camisetaguardian.jpg" 
+                alt="Camiseta The Guardian of Hidden Wisdom" 
+                className="w-full max-w-md mx-auto rounded-xl shadow-lg border border-neutral-800"
+              />
+            </div>
+
+            {/* Detalhes e Controles */}
+            <div className="w-full md:w-1/2 space-y-5">
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-500">Merchandise Oficial</span>
+                <h2 className="text-2xl md:text-3xl font-black text-amber-400 tracking-wide mt-1">
+                  CAMISETA THE GUARDIAN OF HIDDEN WISDOM
+                </h2>
+              </div>
+
+              <p className="text-xs md:text-sm text-neutral-400 leading-relaxed">
+                Camiseta oficial em malha 100% algodão de alta qualidade, estampa exclusiva com acabamento premium. Leve a energia e o peso do metal com você.
+              </p>
+
+              <div className="text-2xl font-bold text-white">
+                R$ 89,90 <span className="text-xs text-neutral-500 font-normal">(via PIX ou Cartão)</span>
+              </div>
+
+              {/* Tamanhos */}
+              <div>
+                <label className="block text-xs font-bold uppercase text-amber-500 mb-2">Escolha o Tamanho:</label>
+                <div className="flex gap-2 flex-wrap">
+                  {tamanhos.map((tam) => (
+                    <button
+                      key={tam}
+                      type="button"
+                      onClick={() => setTamanho(tam)}
+                      className={`px-4 py-2 rounded-lg font-bold text-xs transition border ${
+                        tamanho === tam 
+                          ? 'bg-amber-500 text-black border-amber-500 font-extrabold' 
+                          : 'bg-neutral-950 text-white border-neutral-800 hover:border-neutral-600'
+                      }`}
+                    >
+                      {tam}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Quantidade */}
+              <div>
+                <label htmlFor="qtdCamiseta" className="block text-xs font-bold uppercase text-amber-500 mb-2">Quantidade:</label>
+                <input 
+                  type="number" 
+                  id="qtdCamiseta" 
+                  value={quantidade} 
+                  min="1" 
+                  max="10"
+                  onChange={(e) => setQuantidade(Math.max(1, parseInt(e.target.value) || 1))}
+                  className="w-20 bg-neutral-950 border border-neutral-800 text-white font-bold text-center py-2 rounded-lg text-sm focus:outline-none focus:border-amber-500"
+                />
+              </div>
+
+              {/* Botão WhatsApp */}
+              <button 
+                onClick={handleComprarZap}
+                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 px-6 rounded-xl text-sm uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-950"
+              >
+                <i data-lucide="message-circle" className="w-5 h-5"></i>
+                <span>Pedir pelo WhatsApp</span>
+              </button>
+
+              <p className="text-[11px] text-neutral-500 text-center">
+                🔒 Atendimento direto e seguro • Pagamento via PIX ou Cartão
+              </p>
+            </div>
+
+          </div>
+        </section>
+      );
+    }
+
+    function MarcoBrandferApp() {
+      const [currentPlayingId, setCurrentPlayingId] = useState(null);
+      const [currentTime, setCurrentTime] = useState(0);
+      const [duration, setDuration] = useState(0);
+      
+      // Estado de Registro VIP
+      const [isRegistered, setIsRegistered] = useState(() => {
+        return localStorage.getItem('mb_vip_registered') === 'true';
+      });
+      const [vipName, setVipName] = useState('');
+      const [vipLocation, setVipLocation] = useState('');
+      const [vipEmail, setVipEmail] = useState('');
+      const [vipInstagram, setVipInstagram] = useState('');
+
+      const [comments, setComments] = useState([]);
+      const [newComment, setNewComment] = useState('');
+      const [userName, setUserName] = useState('');
+      const [activeFansCount, setActiveFansCount] = useState(342);
+
+      // Gamificação / Enigmas
+      const [unlockedTracks, setUnlockedTracks] = useState({
+        guardian: true,        // Faixa 1 livre
+        raining_tears: false,   // Bloqueada pelo Enigma 1
+        dark_clouds: false     // Bloqueada pelo Enigma 2
+      });
+
+      const [activeRiddle, setActiveRiddle] = useState(null);
+      const [selectedOptionRiddle1, setSelectedOptionRiddle1] = useState('');
+      const [selectedOptionRiddle2, setSelectedOptionRiddle2] = useState('');
+      const [riddleError, setRiddleError] = useState('');
+      const [riddleSuccessText, setRiddleSuccessText] = useState('');
+
+      const [downloadCounts, setDownloadCounts] = useState({
+        guardian: 1240,
+        raining_tears: 980,
+        dark_clouds: 850
+      });
+
+      const [copiedPix, setCopiedPix] = useState(false);
+      const [copiedShare, setCopiedShare] = useState(false);
+      const [isSubmittingVip, setIsSubmittingVip] = useState(false);
+      const [isSubmittingComment, setIsSubmittingComment] = useState(false);
+
+      // Modal de Letras
+      const [selectedLyricsTrack, setSelectedLyricsTrack] = useState(null);
+      const [lyricsLang, setLyricsLang] = useState('en');
+      const [copiedLyrics, setCopiedLyrics] = useState(false);
+
+      const audioRef = useRef(null);
+      const vipSectionRef = useRef(null);
+
+      const SHEETDB_URL = "https://sheetdb.io/api/v1/fh1x3fe0dd2ko"; 
+      const pixKey = "brandfer@hotmail.com"; 
+
+      const socialLinks = {
+        instagram: "https://www.instagram.com/markobrandfer",
+        youtube: "https://www.youtube.com/@Brandfer",
+        kofi: "https://ko-fi.com/marcobrandfer"
+      };
+
+      const tracks = [
+        {
+          id: 'guardian',
+          title: 'The Guardian of Hidden Wisdom',
+          subtitle: 'Single Oficial #1',
+          cover: './images/capaguardian.jpg',
+          audioPreview: './audios/Marco Brandfer - The Guardian of Hidden Wisdom.mp3',
+          downloadFile: './audios/Marco Brandfer - The Guardian of Hidden Wisdom.mp3',
+          lyrics: {
+            en: `The Guardian of Hidden Wisdom
+
+Who´s the watchmen ?”
+
+Through ancient halls, forgotten and cold
+Lies a secret no one has ever told
+A keeper stands, beyond the night
+Guarding the wisdom, sealed from sight
+
+In shadows deep, where the ages sleep
+A power to awaken, for those who seek    
+
+The guardian stands, with knowledge untamed
+The key to the mysteries, to the mysteries forever proclaimed
+
+In silence he waits, The truth of the ages
+beyond the kingdom…
+The Guardian of Hidden Wisdom
+
+“He is the watchmen !”
+
+The scrolls of old, in his hands they remain
+Holding the answers to break every chain
+He watches the world, in its endless strife  
+Knowing the truth could alter life
+
+In shadows deep, where the ages sleep
+A power to awaken, for those who seek
+
+The guardian stands, with knowledge untamed
+The key to the mysteries, to the mysteries forever proclaimed
+
+In silence he waits, The truth of the ages
+beyond the kingdom…
+The Guardian of Hidden Wisdom
+
+Only the worthy may cross the line
+To glimpse the light that forever shines
+But the price is steep, for the truth you crave
+For wisdom may grant or lead to the grave`,
+            pt: `"O Guardião da Sabedoria Oculta"
+
+"Quem é o Guardião?"
+Por corredores antigos, esquecidos e frios
+Reside um segredo que ninguém abriu
+Um guardião vigia além da noite
+Protegendo a sabedoria, oculta da visão
+
+Nas sombras profundas, onde o tempo dorme
+Um poder desperta, para aqueles que procuram
+
+O guardião vigia, o saber guardado
+A chave dos mistérios, eternamente selado
+
+Em silêncio ele espera, além da força absoluta
+O Guardião da Sabedoria Oculta
+
+"Ele é o Guardião !"
+
+Pergaminhos antigos, em suas mãos estão
+Contendo respostas para toda prisão
+Ele observa o mundo em eterno conflito
+Sabendo que a verdade mudaria o escrito
+
+Nas sombras profundas, onde o tempo dorme
+Um poder desperta, para aqueles que procuram
+
+O guardião vigia, o saber guardado
+A chave dos mistérios, eternamente selado
+
+Em silêncio ele espera, além da força absoluta
+O Guardião da Sabedoria Oculta
+
+Apenas os dignos podem cruzar a linha
+Para vislumbrar a luz que eternamente brilha
+Mas o preço é alto pela verdade que você almeja
+Pois a sabedoria pode conceder a vida ou levar à sepultura`
+          }
+        },
+        {
+          id: 'raining_tears',
+          title: 'Raining Tears',
+          subtitle: 'Single Oficial #2',
+          cover: './images/caparaining.jpg',
+          audioPreview: './audios/Marco Brandfer - Raining Tears.mp3',
+          downloadFile: './audios/Marco Brandfer - Raining Tears.mp3',
+          lyrics: {
+            en: `Raining Tears
+
+Broken lands beneath the fire
+Children starving in the cold
+The laughter of Kings from their towers
+Trading blood instead of gold
+
+Shadows march across the valleys
+Burning homes that once were bright
+Mothers praying in the silence
+While the tyrants feast tonight
+
+Hear the crying of the fallen
+Echoes rising through the rain
+How many souls must disappear
+For madmen to embrace their reign?
+
+It's raining tears, oh God!
+From the skies of human pain
+The innocent keep dying
+While the powerful remain
+
+It's raining tears, oh God!
+Can you hear the desperate screams?
+The world is drowning slowly
+In the ashes of their dreams
+
+Silver crowns and crimson banners
+Built upon the poor man's grave
+Empty words of false salvation
+Turn the free into the slaves
+
+Every bomb becomes a sentence
+Every child another scar
+Still the rulers drink their wine
+And watch the slaughter from afar
+
+Can the thunder hide the sorrow?
+Can the darkness kill the truth?
+
+The wolves are wearing holy robes
+Devouring the hopes of youth
+
+It's raining tears, oh God!
+From the skies of human pain
+The innocent keep dying
+While the powerful remain
+
+It's raining tears, oh God!
+Can you hear the desperate screams?
+The world is drowning slowly
+In the ashes of their dreams
+
+“One day, the storm will turn against them and the glorious thunder will destroy their evil thrones... Oh God… It´s raining tears…”
+
+It's raining tears, oh God!
+Let the heavens break the chains
+No more kings above the people
+No more profit made from pain
+
+It's raining tears, oh God!
+Hear the anthem of the free
+From the ruins of oppression
+We will rise eternally`,
+            pt: `Chovendo Lágrimas
+
+Terras devastadas sob o fogo
+Crianças famintas no frio
+O riso dos Reis de suas torres
+Trocando sangue ao invés de ouro
+
+Sombras marcham pelos vales
+Queimando lares outrora iluminados
+Mães rezando no silêncio
+Enquanto tiranos banqueteiam esta noite
+
+Ouça o clamor dos caídos
+Ecos surgindo através da chuva
+Quantas almas precisam desaparecer
+Para loucos abraçarem seu reinado?
+
+Está chovendo lágrimas, ó Deus!
+Dos céus da dor humana
+Os inocentes continuam morrendo
+Enquanto os poderosos permanecem
+
+Está chovendo lágrimas, ó Deus!
+Você consegue ouvir os gritos desesperados?
+O mundo está se afogando lentamente
+Nas cinzas de seus sonhos
+
+Coroas de prata e estandartes carmesim
+Construídos sobre a cova do homem pobre
+Palavras vazias de falsa salvação
+Transformam os livres em escravos
+
+Cada bomba se torna uma sentença
+Cada criança outra cicatriz
+Os governantes ainda bebem seu vinho
+E observam o massacre de longe
+
+Poderá o trovão esconder a tristeza?
+Poderá a escuridão matar a verdade?
+
+Os lobos vestem trajes sagrados
+Devorando as esperanças da juventude
+
+Está chovendo lágrimas, ó Deus!
+Dos céus da dor humana
+Os inocentes continuam morrendo
+Enquanto os poderosos permanecem
+
+Está chovendo lágrimas, ó Deus!
+Você consegue ouvir os gritos desesperados?
+Você consegue ouvir os gritos desesperados?
+O mundo está se afogando lentamente
+Nas cinzas de seus sonhos
+
+"Um dia, a tempestade se voltará contra eles e o trovão glorioso destruirá seus tronos malignos... Ó Deus... Está chovendo lágrimas..."
+
+Está chovendo lágrimas, ó Deus!
+Que os céus quebrem as correntes
+Chega de reis acima do povo
+Chega de lucro gerado pela dor
+
+Está chovendo lágrimas, ó Deus!
+Ouça o hino dos livres
+Das ruínas da opressão
+Nós nos ergueremos eternamente`
+          }
+        },
+        {
+          id: 'dark_clouds',
+          title: 'Dark Clouds',
+          subtitle: 'Single Oficial #3',
+          cover: './images/capadarkclouds.jpg',
+          audioPreview: './audios/Marco Brandfer - Dark Clouds.mp3',
+          downloadFile: './audios/Marco Brandfer - Dark Clouds.mp3',
+          lyrics: {
+            en: `Dark Clouds
+
+Where are my friends?
+Where is my family
+I´m drained to the bone
+My energy is gone..
+
+I feel so heavy
+I'm yawning all the time
+This damned migraine…
+I wanna see the light again ...
+
+I don’t know why all those dark clouds
+hang in the sky…
+
+Loneliness, deep anguish in my heart
+I'm crying, screaming, crying out loud,
+Many people around me but no one can hear me
+
+Sadness, depression fills my head
+Darkness, Infinity, Black Hole
+As the day drags on,
+I Sink deeper inside myself
+
+Old Howling Wind
+Blowing Wind,
+Show me your power
+and take these dark clouds away
+
+I don’t know why all those dark clouds
+hang in the sky…
+
+Old Howling Wind blow upon my face
+The Migraine fades away
+Now I can see the light again`,
+            pt: `Nuvens Negras
+
+Onde estão meus amigos?
+Onde está minha família?
+Estou esgotado até os ossos
+Minha energia se foi...
+
+Sinto-me tão pesado
+Estou bocejando o tempo todo
+Esta maldita enxaqueca...
+Eu quero ver a luz novamente...
+
+Eu não sei por que todas essas nuvens escuras
+pairam no céu...
+
+Solidão, profunda angústia em meu coração
+Estou chorando, gritando, clamando bem alto,
+Muitas pessoas ao meu redor, mas ninguém pode me ouvir
+
+Tristeza, depressão preenche minha cabeça
+Escuridão, Infinito, Buraco Negro
+Conforme o dia se arrasta,
+Eu afundo cada vez mais fundo dentro de mim mesmo
+
+Velho Vento Uivante
+Vento que Sopra,
+Mostre-me seu poder
+e leve embora essas nuvens escuras
+
+Eu não sei por que todas essas nuvens escuras
+pairam no céu...
+
+Velho Vento Uivante sopre sobre meu rosto
+A enxaqueca desaparece
+Agora eu posso ver a luz novamente`
+          }
+        }
+      ];
+
+      const introAudio = {
+        id: 'hero_intro',
+        audioPreview: './audios/guardian.mp3'
+      };
+
+      useEffect(() => {
+        if (window.lucide) {
+          window.lucide.createIcons();
+        }
+      });
+
+      useEffect(() => {
+        if (SHEETDB_URL) {
+          fetch(`${SHEETDB_URL}?sheet=Comments`)
+            .then(res => res.json())
+            .then(data => { if (Array.isArray(data)) setComments(data.reverse()); })
+            .catch(err => console.error("Erro ao carregar comentários:", err));
+
+          fetch(`${SHEETDB_URL}?sheet=Vip_Fans`)
+            .then(res => res.json())
+            .then(data => { 
+              if (Array.isArray(data)) {
+                setActiveFansCount(prev => prev + data.length); 
+              }
+            })
+            .catch(err => console.error("Erro ao carregar lista VIP:", err));
+
+          fetch(`${SHEETDB_URL}?sheet=Downloads`)
+            .then(res => res.json())
+            .then(data => {
+              if (Array.isArray(data)) {
+                setDownloadCounts(prev => {
+                  const updated = { ...prev };
+                  data.forEach(item => {
+                    if (item.song && updated[item.song] !== undefined) {
+                      updated[item.song] += 1;
+                    }
+                  });
+                  return updated;
+                });
+              }
+            })
+            .catch(err => console.error("Erro ao carregar métricas de downloads:", err));
+        }
+      }, []);
+
+      const togglePlayTrack = (trackId, audioSrc) => {
+        if (!unlockedTracks[trackId] && trackId !== 'hero_intro') return;
+        if (currentPlayingId === trackId) {
+          if (audioRef.current) audioRef.current.pause();
+          setCurrentPlayingId(null);
+        } else {
+          if (audioRef.current) {
+            audioRef.current.src = audioSrc;
+            audioRef.current.play();
+          }
+          setCurrentPlayingId(trackId);
+        }
+      };
+
+      const handleTimeUpdate = () => {
+        if (audioRef.current) {
+          setCurrentTime(audioRef.current.currentTime);
+          setDuration(audioRef.current.duration || 0);
+        }
+      };
+
+      const handleSeek = (e) => {
+        const newTime = parseFloat(e.target.value);
+        if (audioRef.current) {
+          audioRef.current.currentTime = newTime;
+          setCurrentTime(newTime);
+        }
+      };
+
+      const formatTime = (secs) => {
+        if (isNaN(secs)) return "0:00";
+        const m = Math.floor(secs / 60);
+        const s = Math.floor(secs % 60);
+        return `${m}:${s < 10 ? '0' : ''}${s}`;
+      };
+
+      const handleVipRegister = async (e) => {
+        e.preventDefault();
+        if (!vipEmail || !vipName) return;
+
+        setIsSubmittingVip(true);
+        const today = new Date().toLocaleDateString('pt-BR');
+
+        const payload = {
+          name: vipName,
+          country: vipLocation || 'Não informado',
+          email: vipEmail,
+          instagram: vipInstagram || 'Não informado',
+          date: today
+        };
+
+        try {
+          if (SHEETDB_URL) {
+            await fetch(`${SHEETDB_URL}?sheet=Vip_Fans`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ data: [payload] })
+            });
+          }
+          localStorage.setItem('mb_vip_registered', 'true');
+          setIsRegistered(true);
+          setActiveFansCount(prev => prev + 1);
+        } catch (err) {
+          console.error("Erro ao salvar cadastro VIP:", err);
+          localStorage.setItem('mb_vip_registered', 'true');
+          setIsRegistered(true);
+        } finally {
+          setIsSubmittingVip(false);
+        }
+      };
+
+      const handleTrackDownloadClick = async (trackId) => {
+        if (!isRegistered) {
+          if (vipSectionRef.current) {
+            vipSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+          }
+          return;
+        }
+
+        setDownloadCounts(prev => ({
+          ...prev,
+          [trackId]: (prev[trackId] || 0) + 1
+        }));
+
+        const today = new Date().toLocaleDateString('pt-BR');
+
+        try {
+          if (SHEETDB_URL) {
+            await fetch(`${SHEETDB_URL}?sheet=Downloads`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ data: [{ song: trackId, date: today }] })
+            });
+          }
+        } catch (err) {
+          console.error("Erro ao registrar estatística de download:", err);
+        }
+      };
+
+      const getRockAvatar = (name) => {
+        const cleanName = encodeURIComponent(name.trim().toLowerCase());
+        return `https://api.dicebear.com/7.x/bottts/svg?seed=${cleanName}&backgroundColor=000000,b91c1c,171717`;
+      };
+
+      const handleAddComment = async (e) => {
+        e.preventDefault();
+        if (!newComment.trim() || !userName.trim()) return;
+
+        setIsSubmittingComment(true);
+        const avatarUrl = getRockAvatar(userName);
+        const today = new Date().toLocaleDateString('pt-BR');
+        const commentObj = {
+          name: userName,
+          text: newComment,
+          date: today,
+          avatar: avatarUrl
+        };
+
+        try {
+          if (SHEETDB_URL) {
+            await fetch(`${SHEETDB_URL}?sheet=Comments`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ data: [commentObj] })
+            });
+          }
+          setComments([commentObj, ...comments]);
+          setNewComment('');
+          setUserName('');
+        } catch (err) {
+          console.error("Erro ao postar comentário:", err);
+        } finally {
+          setIsSubmittingComment(false);
+        }
+      };
+
+      const copyPixToClipboard = () => {
+        navigator.clipboard.writeText(pixKey);
+        setCopiedPix(true);
+        setTimeout(() => setCopiedPix(false), 3000);
+      };
+
+      const handleShareApp = () => {
+        const shareData = {
+          title: 'Marco Brandfer - Official Web App',
+          text: 'Ouça os singles de Heavy Metal independente, decifre os enigmas e baixe as músicas de Marco Brandfer!',
+          url: window.location.href
+        };
+
+        if (navigator.share) {
+          navigator.share(shareData).catch((err) => console.log('Erro ao compartilhar:', err));
+        } else {
+          navigator.clipboard.writeText(window.location.href);
+          setCopiedShare(true);
+          setTimeout(() => setCopiedShare(false), 3000);
+        }
+      };
+
+      const copyLyricsToClipboard = () => {
+        if (!selectedLyricsTrack) return;
+        const textToCopy = selectedLyricsTrack.lyrics[lyricsLang];
+        navigator.clipboard.writeText(textToCopy);
+        setCopiedLyrics(true);
+        setTimeout(() => setCopiedLyrics(false), 2500);
+      };
+
+      const handleSolveRiddle1 = (e) => {
+        e.preventDefault();
+        if (selectedOptionRiddle1 === 'B') {
+          setRiddleError('');
+          setRiddleSuccessText("Você é o tempo. Você é a sua consciência. O Guardião não é só uma pessoa, é a alma, a consciência, é o ouvinte digno de carregar a verdade contida nos pergaminhos (The Scrolls of Old). Você provou ser digno. O Portal para Raining Tears está liberado!");
+          setUnlockedTracks(prev => ({ ...prev, raining_tears: true }));
+        } else {
+          setRiddleError("Resposta incorreta! Dica: Leia atenciosamente a letra de 'The Guardian of Hidden Wisdom'.");
+        }
+      };
+
+      const handleSolveRiddle2 = (e) => {
+        e.preventDefault();
+        if (selectedOptionRiddle2 === 'C') {
+          setRiddleError('');
+          setRiddleSuccessText("Sua visão alcançou além das sombras. Você é a chama e a consciência que dissipa as Nuvens Negras. A faixa 'Dark Clouds' foi totalmente desbloqueada!");
+          setUnlockedTracks(prev => ({ ...prev, dark_clouds: true }));
+        } else {
+          setRiddleError("Incorreto! Pense bem: quem é que escuta a música e desperta a sabedoria dentro de si?");
+        }
+      };
+
+      const closeRiddleModal = () => {
+        setActiveRiddle(null);
+        setRiddleError('');
+        setRiddleSuccessText('');
+        setSelectedOptionRiddle1('');
+        setSelectedOptionRiddle2('');
+      };
+
+      return (
+        <div className="min-h-screen relative">
+          
+          <audio 
+            ref={audioRef} 
+            onTimeUpdate={handleTimeUpdate} 
+            onEnded={() => { setCurrentPlayingId(null); setCurrentTime(0); }}
+          ></audio>
+
+          {/* Sticky Header */}
+          <header className="sticky top-0 z-40 bg-neutral-900/90 backdrop-blur-md border-b border-neutral-800 px-4 py-3 flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <i data-lucide="disc" className="w-6 h-6 text-red-600 animate-spin"></i>
+              <span className="font-extrabold tracking-wider text-lg uppercase bg-gradient-to-r from-white via-neutral-200 to-neutral-400 bg-clip-text text-transparent">
+                Marco Brandfer <span className="text-red-600 text-xs px-2 py-0.5 border border-red-600 rounded-full">APP</span>
+              </span>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <button 
+                onClick={handleShareApp} 
+                className="text-neutral-300 hover:text-white bg-neutral-800 hover:bg-neutral-700 border border-neutral-700/60 px-3 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1.5"
+                title="Compartilhar Web App"
+              >
+                <i data-lucide={copiedShare ? "check" : "share-2"} className="w-3.5 h-3.5 text-red-500"></i>
+                <span className="hidden sm:inline">{copiedShare ? 'Link Copiado!' : 'Compartilhar'}</span>
+              </button>
+
+              <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-white transition">
+                <i data-lucide="instagram" className="w-5 h-5"></i>
+              </a>
+              <a href={socialLinks.youtube} target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-red-500 transition">
+                <i data-lucide="youtube" className="w-5 h-5"></i>
+              </a>
+              <a href="#support" className="text-xs bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-full font-bold transition ml-1">
+                Apoiar
+              </a>
+            </div>
+          </header>
+
+          {/* Banner Hero */}
+          <section className="max-w-5xl mx-auto mt-6 px-4">
+            <div className="bg-neutral-900 border border-neutral-800 rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row items-center">
+              
+              <div className="w-full md:w-1/2 p-2 sm:p-4 bg-neutral-950 flex items-center justify-center">
+                <img 
+                  src="./images/hero-banner.jpg" 
+                  alt="Marco Brandfer" 
+                  className="w-full h-auto max-h-[400px] md:max-h-[500px] object-contain rounded-2xl"
+                />
+              </div>
+
+              <div className="w-full md:w-1/2 p-6 md:p-10 space-y-4">
+                <span className="text-xs uppercase tracking-widest font-bold text-red-500 flex items-center gap-2">
+                  <i data-lucide="volume-2" className="w-4 h-4"></i> Quem é o Guardião ?
+                </span>
+                
+                <h2 className="text-xl md:text-2xl font-light italic text-neutral-300 leading-tight">
+                  "Only the worthy may cross the Line..."
+                </h2>
+                
+                <p className="text-xs md:text-sm text-neutral-400 leading-relaxed">
+                  Ouça Agora <strong className="text-neutral-200">The Guardian of Hidden Wisdom</strong>, estude a letra e decifre os enigmas para desbloquear as próximas faixas!
+                </p>
+
+                <div className="pt-2">
+                  <button 
+                    onClick={() => togglePlayTrack(introAudio.id, introAudio.audioPreview)}
+                    className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-extrabold px-6 py-3.5 rounded-2xl transition flex items-center justify-center gap-3 shadow-lg shadow-red-950/50 group"
+                  >
+                    {currentPlayingId === introAudio.id ? (
+                      <svg className="w-5 h-5 fill-white group-hover:scale-110 transition" viewBox="0 0 24 24">
+                        <rect x="6" y="4" width="4" height="16" rx="1" />
+                        <rect x="14" y="4" width="4" height="16" rx="1" />
+                      </svg>
+                    ) : (
+                      <svg className="w-5 h-5 fill-white group-hover:scale-110 transition" viewBox="0 0 24 24">
+                        <polygon points="5,3 19,12 5,21" />
+                      </svg>
+                    )}
+                    <span>{currentPlayingId === introAudio.id ? "Pausar" : "Clique e Ouça (35s)"}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Decifre os Enigmas Ocultos */}
+          <section className="max-w-5xl mx-auto my-12 px-4 space-y-6">
+            <div className="text-center space-y-2">
+              <h1 className="text-3xl font-black uppercase tracking-tight">Decifre os Enigmas Ocultos</h1>
+              <p className="text-xs text-neutral-400 max-w-lg mx-auto leading-relaxed">
+                <strong className="text-red-500">Dica:</strong> Para quebrar os selos das novas faixas, Ouça a Prévia e Acompanhe a Letra, as respostas podem estar lá
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {tracks.map((track, idx) => {
+                const isUnlocked = unlockedTracks[track.id];
+                const isThisPlaying = currentPlayingId === track.id;
+                const count = downloadCounts[track.id] || 0;
+
+                return (
+                  <div 
+                    key={track.id} 
+                    className={`bg-neutral-900 border rounded-2xl overflow-hidden flex flex-col justify-between shadow-xl transition relative ${
+                      isUnlocked 
+                        ? 'border-neutral-800 hover:border-red-900/50' 
+                        : 'border-amber-900/40 bg-neutral-950/90'
+                    }`}
+                  >
+                    {!isUnlocked && (
+                      <div className="absolute top-3 right-3 z-10 bg-amber-500/20 border border-amber-500/40 backdrop-blur-md px-2.5 py-1 rounded-full flex items-center gap-1 shadow-lg">
+                        <i data-lucide="lock" className="w-3.5 h-3.5 text-amber-400"></i>
+                        <span className="text-[10px] font-bold text-amber-300 uppercase">Selado</span>
+                      </div>
+                    )}
+
+                    <div>
+                      <div className="relative aspect-square overflow-hidden bg-neutral-950">
+                        <img 
+                          src={track.cover} 
+                          alt={track.title} 
+                          className={`w-full h-full object-cover group-hover:scale-105 transition duration-500 ${!isUnlocked ? 'filter blur-sm opacity-40' : ''}`}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-transparent to-transparent"></div>
+                        
+                        <span className="absolute top-3 left-3 bg-neutral-950/80 backdrop-blur-md text-[10px] font-mono text-neutral-300 border border-neutral-800 px-2.5 py-1 rounded-full flex items-center gap-1 shadow-lg z-10">
+                          <i data-lucide="download" className="w-3 h-3 text-red-500"></i> {count.toLocaleString('pt-BR')} Downloads
+                        </span>
+                      </div>
+
+                      <div className="p-4 space-y-3">
+                        <div className="flex justify-between items-start gap-2">
+                          <div>
+                            <span className="text-[10px] uppercase font-bold text-red-500 tracking-wider">{track.subtitle}</span>
+                            <h3 className="font-bold text-base text-white line-clamp-1">{track.title}</h3>
+                          </div>
+                          
+                          <button 
+                            onClick={() => { setSelectedLyricsTrack(track); setLyricsLang('en'); }}
+                            title="Ver Letra e Tradução"
+                            className="bg-neutral-800 hover:bg-neutral-700 text-neutral-300 p-2 rounded-xl transition flex items-center gap-1.5 border border-neutral-700/60 flex-shrink-0"
+                          >
+                            <i data-lucide="file-text" className="w-4 h-4 text-red-500"></i>
+                            <span className="text-[10px] font-bold">Letra</span>
+                          </button>
+                        </div>
+
+                        {isUnlocked ? (
+                          <div className="bg-neutral-950/80 border border-neutral-800/80 rounded-xl p-3 space-y-2">
+                            <div className="flex items-center gap-3">
+                              <button 
+                                onClick={() => togglePlayTrack(track.id, track.audioPreview)}
+                                aria-label={isThisPlaying ? "Pausar" : "Tocar"}
+                                className="bg-red-600 hover:bg-red-700 text-white p-2.5 rounded-full transition flex-shrink-0 flex items-center justify-center shadow-md shadow-red-950"
+                              >
+                                {isThisPlaying ? (
+                                  <svg className="w-4 h-4 fill-white" viewBox="0 0 24 24">
+                                    <rect x="6" y="4" width="4" height="16" rx="1" />
+                                    <rect x="14" y="4" width="4" height="16" rx="1" />
+                                  </svg>
+                                ) : (
+                                  <svg className="w-4 h-4 fill-white" viewBox="0 0 24 24">
+                                    <polygon points="5,3 19,12 5,21" />
+                                  </svg>
+                                )}
+                              </button>
+                              
+                              <div className="flex-1 space-y-1">
+                                <input 
+                                  type="range" 
+                                  min="0" 
+                                  max={isThisPlaying ? duration || 100 : 100}
+                                  value={isThisPlaying ? currentTime : 0}
+                                  onChange={isThisPlaying ? handleSeek : undefined}
+                                  disabled={!isThisPlaying}
+                                  className="w-full h-1.5 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-red-600 disabled:opacity-40"
+                                />
+                                
+                                <div className="flex justify-between text-[10px] font-mono text-neutral-400">
+                                  <span>{isThisPlaying ? formatTime(currentTime) : "0:00"}</span>
+                                  <span>{isThisPlaying && duration ? formatTime(duration) : "Prévia"}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="bg-neutral-950 border border-amber-900/30 p-4 rounded-xl text-center space-y-3">
+                            <p className="text-xs text-amber-200/80 font-medium leading-relaxed">
+                              {idx === 1 ? "Decifre o Enigma da Faixa 1 para revelar o portal de Raining Tears!" : "Decifre o Enigma do Guardião Supremo para liberar Dark Clouds!"}
+                            </p>
+                            <button 
+                              onClick={() => setActiveRiddle(idx === 1 ? 'riddle1' : 'riddle2')}
+                              className="w-full bg-gradient-to-r from-amber-600 to-red-600 hover:from-amber-500 hover:to-red-500 text-white font-bold text-xs py-2.5 rounded-xl transition shadow-lg shadow-red-950/50 flex items-center justify-center gap-2"
+                            >
+                              <i data-lucide="key" className="w-4 h-4"></i>
+                              <span>Decifrar Enigma</span>
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="p-4 pt-0 space-y-2">
+                      {isUnlocked ? (
+                        <a 
+                          href={isRegistered ? track.downloadFile : "#vip"}
+                          download={isRegistered ? `${track.title}.mp3` : undefined}
+                          onClick={() => handleTrackDownloadClick(track.id)}
+                          className={`w-full py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition ${
+                            isRegistered 
+                              ? 'bg-neutral-100 hover:bg-white text-black' 
+                              : 'bg-neutral-800 hover:bg-neutral-700 text-neutral-300 border border-neutral-700'
+                          }`}
+                        >
+                          <i data-lucide={isRegistered ? "download" : "lock"} className="w-4 h-4"></i>
+                          <span>{isRegistered ? 'Baixar Música (.MP3)' : 'Desbloquear Download Grátis'}</span>
+                        </a>
+                      ) : (
+                        <div className="py-2.5 text-center text-xs text-neutral-600 font-mono italic">
+                          🔒 Conteúdo Bloqueado
+                        </div>
+                      )}
+
+                      <a 
+                        href="#support" 
+                        className="w-full py-2 rounded-xl font-bold text-xs bg-transparent hover:bg-neutral-800/80 text-neutral-400 hover:text-white border border-neutral-800 flex items-center justify-center gap-2 transition"
+                      >
+                        <i data-lucide="handshake" className="w-4 h-4 text-red-500"></i>
+                        <span>Apoiar Projeto</span>
+                      </a>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+
+          {/* VIP Fan Area */}
+          <section id="vip" ref={vipSectionRef} className="max-w-3xl mx-auto my-12 px-4">
+            <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 md:p-8 relative overflow-hidden">
+              <div className="flex justify-between items-center mb-4">
+                <div className="flex items-center gap-3">
+                  <i data-lucide="music" className="text-red-500 w-6 h-6"></i>
+                  <h2 className="text-xl md:text-2xl font-bold">VIP Fan Area & Downloads</h2>
+                </div>
+                <span className="text-xs bg-neutral-800 text-neutral-300 border border-neutral-700 px-3 py-1 rounded-full font-mono">
+                  🔥 {activeFansCount} Active Fans
+                </span>
+              </div>
+
+              {!isRegistered ? (
+                <div className="space-y-4">
+                  <p className="text-neutral-400 text-sm">
+                    Preencha os dados abaixo para Desbloquear Downloads de todos os singles em alta qualidade.
+                  </p>
+                  
+                  <form onSubmit={handleVipRegister} className="space-y-3 pt-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div>
+                        <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block mb-1">Seu Nome *</label>
+                        <input 
+                          type="text" 
+                          required
+                          placeholder="Digite seu nome completo" 
+                          value={vipName}
+                          onChange={(e) => setVipName(e.target.value)}
+                          className="w-full bg-neutral-950 border border-neutral-800 text-white px-4 py-2.5 rounded-xl focus:outline-none focus:border-red-600 text-sm"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block mb-1">Cidade / País *</label>
+                        <input 
+                          type="text" 
+                          required
+                          placeholder="Ex: São Paulo / Brasil" 
+                          value={vipLocation}
+                          onChange={(e) => setVipLocation(e.target.value)}
+                          className="w-full bg-neutral-950 border border-neutral-800 text-white px-4 py-2.5 rounded-xl focus:outline-none focus:border-red-600 text-sm"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div>
+                        <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block mb-1">E-mail *</label>
+                        <input 
+                          type="email" 
+                          required
+                          placeholder="Digite seu melhor e-mail" 
+                          value={vipEmail}
+                          onChange={(e) => setVipEmail(e.target.value)}
+                          className="w-full bg-neutral-950 border border-neutral-800 text-white px-4 py-2.5 rounded-xl focus:outline-none focus:border-red-600 text-sm"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block mb-1">Instagram (@usuario)</label>
+                        <input 
+                          type="text" 
+                          placeholder="@seuinstagram" 
+                          value={vipInstagram}
+                          onChange={(e) => setVipInstagram(e.target.value)}
+                          className="w-full bg-neutral-950 border border-neutral-800 text-white px-4 py-2.5 rounded-xl focus:outline-none focus:border-red-600 text-sm"
+                        />
+                      </div>
+                    </div>
+
+                    <button 
+                      type="submit" 
+                      disabled={isSubmittingVip}
+                      className="w-full bg-red-600 hover:bg-red-700 font-bold px-6 py-3.5 rounded-xl transition text-sm flex items-center justify-center gap-2 disabled:opacity-50 mt-2 shadow-lg shadow-red-950"
+                    >
+                      <i data-lucide="unlock" className="w-4 h-4"></i>
+                      <span>{isSubmittingVip ? 'Liberando Acesso VIP...' : 'Digitar e-mail para Desbloquear Downloads'}</span>
+                    </button>
+                  </form>
+                </div>
+              ) : (
+                <div className="bg-neutral-950/80 border border-green-500/30 p-5 rounded-xl space-y-2">
+                  <div className="flex items-center gap-2 text-green-400 font-bold text-sm">
+                    <i data-lucide="user-check" className="w-5 h-5"></i> Acesso VIP Liberado!
+                  </div>
+                  <p className="text-xs text-neutral-400">
+                    Você já possui acesso VIP ativado. Escolha qualquer uma das músicas desbloqueadas nos cards acima para realizar o download direto do arquivo MP3.
+                  </p>
+                </div>
+              )}
+            </div>
+          </section>
+
+          {/* Support */}
+          <section id="support" className="max-w-3xl mx-auto my-12 px-4 space-y-6">
+            <div className="text-center space-y-3">
+              <h2 className="text-2xl font-black uppercase tracking-tight">Apoie o Projeto</h2>
+              <p className="text-xs md:text-sm text-neutral-300 max-w-2xl mx-auto leading-relaxed font-light">
+                Você já sentiu que uma música salvou o seu dia? Eu sei exatamente como é isso... Estas 3 faixas nasceram no caos, e colocá-las no mundo é a minha forma de transformar dor em arte, em energia e vibração! Saber que elas de alguma forma melhoraram o seu dia, me fortalece e a troca, o ciclo, está concluído! Ajude a manter a produção do Metal independente ativa. Escolha a melhor plataforma abaixo para apoiar os próximos lançamentos! Gratidão!!!
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 flex flex-col justify-between space-y-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-amber-500 font-bold text-sm">
+                    <i data-lucide="coffee" className="w-5 h-5"></i> International Support
+                  </div>
+                  <h3 className="font-bold text-base text-white">Buy me a coffee on Ko-fi ☕</h3>
+                  <p className="text-xs text-neutral-400">Apoio internacional diretamente via Ko-fi em USD/EUR.</p>
+                </div>
+                <a 
+                  href={socialLinks.kofi} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="w-full bg-amber-500 hover:bg-amber-600 text-black font-extrabold text-xs py-3 rounded-xl transition text-center flex items-center justify-center gap-2"
+                >
+                  <span>Apoiar via Ko-fi</span>
+                  <i data-lucide="external-link" className="w-4 h-4"></i>
+                </a>
+              </div>
+
+              <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 flex flex-col justify-between space-y-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+                    <i data-lucide="qr-code" className="w-5 h-5"></i> Apoio Nacional (Brasil)
+                  </div>
+                  <h3 className="font-bold text-base text-white">Contribuição via Pix 🇧🇷</h3>
+                  <p className="text-xs text-neutral-400">Copie a chave Pix abaixo para enviar qualquer valor de apoio.</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="bg-neutral-950 border border-neutral-800 px-3 py-2 rounded-lg text-xs font-mono text-neutral-300 truncate">
+                    {pixKey}
+                  </div>
+                  <button 
+                    onClick={copyPixToClipboard}
+                    className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 rounded-xl transition flex items-center justify-center gap-2"
+                  >
+                    <i data-lucide={copiedPix ? "check" : "copy"} className="w-4 h-4"></i>
+                    <span>{copiedPix ? 'Chave Pix Copiada!' : 'Copiar Chave Pix'}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Bloco de Compartilhamento Direto */}
+            <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 text-center space-y-4">
+              <p className="text-xs md:text-sm font-semibold text-neutral-300">
+                Compartilhe essa Novidade com seus Amigos que Apreciam o Bom Heavy Metal
+              </p>
+              <button 
+                onClick={handleShareApp} 
+                className="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-xl text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 mx-auto shadow-lg shadow-red-950"
+              >
+                <i data-lucide={copiedShare ? "check" : "share-2"} className="w-4 h-4"></i>
+                <span>{copiedShare ? 'Link Copiado!' : 'Compartilhar App'}</span>
+              </button>
+            </div>
+          </section>
+
+          {/* Mural dos Fãs */}
+          <section className="max-w-3xl mx-auto my-12 px-4">
+            <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 md:p-8 space-y-6">
+              <div className="flex items-center gap-3 border-b border-neutral-800 pb-4">
+                <i data-lucide="message-square" className="text-red-500 w-6 h-6"></i>
+                <div>
+                  <h2 className="text-xl font-bold">Mural dos Fãs & Comunidade</h2>
+                  <p className="text-xs text-neutral-400">E aí, já ouviu?? Qual a sua Faixa Favorita?? Ouça e Deixe seu comentário abaixo!</p>
+                </div>
+              </div>
+
+              <form onSubmit={handleAddComment} className="space-y-3">
+                <input 
+                  type="text" 
+                  required
+                  placeholder="Seu Nome ou Nick"
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
+                  className="w-full bg-neutral-950 border border-neutral-800 text-white px-4 py-2.5 rounded-xl focus:outline-none focus:border-red-600 text-sm"
+                />
+                <textarea 
+                  required
+                  rows="3"
+                  placeholder="Sua opinião é de valor imensurável! Ouça Agora todas as Faixas e diga qual a sua Favorita..."
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  className="w-full bg-neutral-950 border border-neutral-800 text-white px-4 py-2.5 rounded-xl focus:outline-none focus:border-red-600 text-sm"
+                ></textarea>
+                <button 
+                  type="submit" 
+                  disabled={isSubmittingComment}
+                  className="bg-red-600 hover:bg-red-700 font-bold px-6 py-2.5 rounded-xl text-xs transition uppercase tracking-wider flex items-center gap-2 disabled:opacity-50"
+                >
+                  <i data-lucide="send" className="w-3.5 h-3.5"></i>
+                  <span>{isSubmittingComment ? 'Enviando...' : 'Publicar Comentário'}</span>
+                </button>
+              </form>
+
+              <div className="space-y-3 pt-2">
+                {comments.length === 0 ? (
+                  <p className="text-xs text-neutral-500 italic">Nenhum comentário ainda. Seja o primeiro a comentar!</p>
+                ) : (
+                  comments.map((item, index) => (
+                    <div key={index} className="bg-neutral-950 p-4 rounded-xl border border-neutral-800/60 flex gap-3.5 items-start">
+                      <div className="w-10 h-10 rounded-xl bg-neutral-900 border border-neutral-800 p-1 flex-shrink-0 overflow-hidden">
+                        <img 
+                          src={item.avatar || getRockAvatar(item.name)} 
+                          alt={item.name} 
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                      <div className="flex-1 space-y-1">
+                        <div className="flex justify-between items-center">
+                          <span className="font-bold text-xs text-red-500">{item.name}</span>
+                          <span className="text-[10px] text-neutral-500">{item.date}</span>
+                        </div>
+                        <p className="text-xs text-neutral-300 leading-relaxed">{item.text}</p>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </section>
+
+          {/* SEÇÃO OFICIAL DE CAMISETAS (ÚLTIMA COISA DO APP) */}
+          <CamisetaSection />
+
+          {/* Footer */}
+          <footer className="max-w-4xl mx-auto mt-16 px-4 pt-8 border-t border-neutral-800 text-center space-y-6">
+            <div className="flex justify-center items-center gap-8">
+              <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-white transition flex items-center gap-2 text-xs font-bold">
+                <i data-lucide="instagram" className="w-5 h-5 text-red-500"></i> Instagram
+              </a>
+
+              <a href={socialLinks.youtube} target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-red-500 transition flex items-center gap-2 text-xs font-bold">
+                <i data-lucide="youtube" className="w-5 h-5 text-red-500"></i> YouTube (@Brandfer)
+              </a>
+
+              <a href={socialLinks.kofi} target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-amber-400 transition flex items-center gap-2 text-xs font-bold">
+                <i data-lucide="coffee" className="w-5 h-5 text-amber-500"></i> Ko-fi
+              </a>
+            </div>
+
+            <p className="text-xs text-neutral-500">© 2026 Marco Brandfer. All rights reserved.</p>
+          </footer>
+
+          {/* MODAL DE LETRAS & TRADUÇÃO */}
+          {selectedLyricsTrack && (
+            <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+              <div className="bg-neutral-900 border border-neutral-800 w-full max-w-xl rounded-2xl overflow-hidden flex flex-col max-h-[85vh] shadow-2xl">
+                
+                <div className="p-4 bg-neutral-950 border-b border-neutral-800 flex justify-between items-center">
+                  <div className="flex items-center gap-3">
+                    <img 
+                      src={selectedLyricsTrack.cover} 
+                      alt={selectedLyricsTrack.title} 
+                      className="w-10 h-10 rounded-lg object-cover border border-neutral-800"
+                    />
+                    <div>
+                      <h3 className="font-bold text-sm text-white">{selectedLyricsTrack.title}</h3>
+                      <p className="text-[10px] text-neutral-400 uppercase font-mono tracking-wider">{selectedLyricsTrack.subtitle}</p>
+                    </div>
+                  </div>
+
+                  <button 
+                    onClick={() => setSelectedLyricsTrack(null)}
+                    className="text-neutral-400 hover:text-white p-1 rounded-lg bg-neutral-900 border border-neutral-800 transition"
+                  >
+                    <i data-lucide="x" className="w-5 h-5"></i>
+                  </button>
+                </div>
+
+                <div className="px-4 py-3 bg-neutral-900 border-b border-neutral-800 flex justify-between items-center gap-2">
+                  <div className="flex gap-2">
+                    <button 
+                      onClick={() => setLyricsLang('en')}
+                      className={`text-xs px-3 py-1.5 rounded-lg font-bold border transition ${
+                        lyricsLang === 'en' 
+                          ? 'bg-red-600 text-white border-red-500' 
+                          : 'bg-neutral-950 text-neutral-400 border-neutral-800 hover:text-white'
+                      }`}
+                    >
+                      🇬🇧 Original (EN)
+                    </button>
+                    <button 
+                      onClick={() => setLyricsLang('pt')}
+                      className={`text-xs px-3 py-1.5 rounded-lg font-bold border transition ${
+                        lyricsLang === 'pt' 
+                          ? 'bg-red-600 text-white border-red-500' 
+                          : 'bg-neutral-950 text-neutral-400 border-neutral-800 hover:text-white'
+                      }`}
+                    >
+                      🇧🇷 Tradução (PT-BR)
+                    </button>
+                  </div>
+
+                  <button 
+                    onClick={copyLyricsToClipboard}
+                    className="text-xs text-neutral-300 hover:text-white bg-neutral-950 border border-neutral-800 px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition"
+                  >
+                    <i data-lucide={copiedLyrics ? "check" : "copy"} className="w-3.5 h-3.5 text-red-500"></i>
+                    <span>{copiedLyrics ? 'Copiado!' : 'Copiar'}</span>
+                  </button>
+                </div>
+
+                <div className="p-6 overflow-y-auto font-mono text-sm leading-relaxed text-neutral-300 whitespace-pre-line bg-neutral-950/50">
+                  {selectedLyricsTrack.lyrics[lyricsLang]}
+                </div>
+
+                <div className="p-4 bg-neutral-950 border-t border-neutral-800 text-center">
+                  <button 
+                    onClick={() => setSelectedLyricsTrack(null)}
+                    className="w-full bg-neutral-800 hover:bg-neutral-700 text-white text-xs font-bold py-2.5 rounded-xl transition"
+                  >
+                    Fechar
+                  </button>
+                </div>
+
+              </div>
+            </div>
+          )}
+
+          {/* MODAL ENIGMA #1 */}
+          {activeRiddle === 'riddle1' && (
+            <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+              <div className="bg-neutral-900 border border-amber-500/40 w-full max-w-lg rounded-2xl p-6 space-y-5 shadow-2xl">
+                <div className="flex justify-between items-center border-b border-neutral-800 pb-3">
+                  <span className="text-xs font-bold uppercase text-amber-500 flex items-center gap-2">
+                    <i data-lucide="shield-alert" className="w-4 h-4"></i> Enigma de Desbloqueio #1
+                  </span>
+                  <button onClick={closeRiddleModal} className="text-neutral-400 hover:text-white">✕</button>
+                </div>
+
+                {!riddleSuccessText ? (
+                  <form onSubmit={handleSolveRiddle1} className="space-y-4">
+                    <p className="text-sm font-semibold text-neutral-200 leading-relaxed">
+                      "Nas sombras profundas, ele guarda a sabedoria que a humanidade esqueceu. 'He is the watchmen!' Mas o que o Guardião realmente protege nas mãos?"
+                    </p>
+
+                    <div className="space-y-2">
+                      {[
+                        { id: 'A', text: 'A) Uma espada de ouro' },
+                        { id: 'B', text: 'B) Pergaminhos Antigos (The Scrolls of Old)' },
+                        { id: 'C', text: 'C) Uma coroa de prata' },
+                        { id: 'D', text: 'D) O Trono de Ferro' }
+                      ].map((opt) => (
+                        <label 
+                          key={opt.id} 
+                          className={`flex items-center gap-3 p-3 rounded-xl border text-xs cursor-pointer transition ${
+                            selectedOptionRiddle1 === opt.id 
+                              ? 'bg-red-950/60 border-red-600 text-white font-bold' 
+                              : 'bg-neutral-950 border-neutral-800 text-neutral-300 hover:border-neutral-700'
+                          }`}
+                        >
+                          <input 
+                            type="radio" 
+                            name="riddle1" 
+                            value={opt.id}
+                            checked={selectedOptionRiddle1 === opt.id}
+                            onChange={(e) => setSelectedOptionRiddle1(e.target.value)}
+                            className="accent-red-600"
+                          />
+                          <span>{opt.text}</span>
+                        </label>
+                      ))}
+                    </div>
+
+                    {riddleError && <p className="text-xs text-red-500 font-bold">{riddleError}</p>}
+
+                    <button 
+                      type="submit" 
+                      disabled={!selectedOptionRiddle1}
+                      className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl text-xs uppercase tracking-wider transition disabled:opacity-50"
+                    >
+                      Quebrar o Selo
+                    </button>
+                  </form>
+                ) : (
+                  <div className="space-y-4 text-center">
+                    <div className="w-12 h-12 bg-amber-500/20 text-amber-500 rounded-full flex items-center justify-center mx-auto text-2xl">
+                      🔓
+                    </div>
+                    <h3 className="font-extrabold text-lg text-white uppercase">Selo Quebrado!</h3>
+                    <p className="text-xs text-neutral-300 leading-relaxed bg-neutral-950 p-4 rounded-xl border border-neutral-800">
+                      "{riddleSuccessText}"
+                    </p>
+                    <button 
+                      onClick={closeRiddleModal} 
+                      className="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-xl text-xs uppercase transition"
+                    >
+                      Ouvir Raining Tears Agora
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* MODAL ENIGMA #2 */}
+          {activeRiddle === 'riddle2' && (
+            <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+              <div className="bg-neutral-900 border border-amber-500/40 w-full max-w-lg rounded-2xl p-6 space-y-5 shadow-2xl">
+                <div className="flex justify-between items-center border-b border-neutral-800 pb-3">
+                  <span className="text-xs font-bold uppercase text-amber-500 flex items-center gap-2">
+                    <i data-lucide="shield-alert" className="w-4 h-4"></i> Enigma de Desbloqueio #2
+                  </span>
+                  <button onClick={closeRiddleModal} className="text-neutral-400 hover:text-white">✕</button>
+                </div>
+
+                {!riddleSuccessText ? (
+                  <form onSubmit={handleSolveRiddle2} className="space-y-4">
+                    <p className="text-sm font-semibold text-neutral-200 leading-relaxed">
+                      "Ele é quem vigia além da noite, protegendo a sabedoria oculta... Quem é o verdadeiro Guardião da Sabedoria Oculta?"
+                    </p>
+
+                    <div className="space-y-2">
+                      {[
+                        { id: 'A', text: 'A) Um guerreiro esquecido das lendas' },
+                        { id: 'B', text: 'B) O Rei dos Ventos Antigos' },
+                        { id: 'C', text: 'C) Você mesmo (O ouvinte / A sua consciência)' },
+                        { id: 'D', text: 'D) O próprio vilão das sombras' }
+                      ].map((opt) => (
+                        <label 
+                          key={opt.id} 
+                          className={`flex items-center gap-3 p-3 rounded-xl border text-xs cursor-pointer transition ${
+                            selectedOptionRiddle2 === opt.id 
+                              ? 'bg-red-950/60 border-red-600 text-white font-bold' 
+                              : 'bg-neutral-950 border-neutral-800 text-neutral-300 hover:border-neutral-700'
+                          }`}
+                        >
+                          <input 
+                            type="radio" 
+                            name="riddle2" 
+                            value={opt.id}
+                            checked={selectedOptionRiddle2 === opt.id}
+                            onChange={(e) => setSelectedOptionRiddle2(e.target.value)}
+                            className="accent-red-600"
+                          />
+                          <span>{opt.text}</span>
+                        </label>
+                      ))}
+                    </div>
+
+                    {riddleError && <p className="text-xs text-red-500 font-bold">{riddleError}</p>}
+
+                    <button 
+                      type="submit" 
+                      disabled={!selectedOptionRiddle2}
+                      className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl text-xs uppercase tracking-wider transition disabled:opacity-50"
+                    >
+                      Revelar Segredo
+                    </button>
+                  </form>
+                ) : (
+                  <div className="space-y-4 text-center">
+                    <div className="w-12 h-12 bg-amber-500/20 text-amber-500 rounded-full flex items-center justify-center mx-auto text-2xl">
+                      ⚡
+                    </div>
+                    <h3 className="font-extrabold text-lg text-white uppercase">Acesso Concedido!</h3>
+                    <p className="text-xs text-neutral-300 leading-relaxed bg-neutral-950 p-4 rounded-xl border border-neutral-800">
+                      "{riddleSuccessText}"
+                    </p>
+                    <button 
+                      onClick={closeRiddleModal} 
+                      className="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-xl text-xs uppercase transition"
+                    >
+                      Ouvir Dark Clouds Agora
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<MarcoBrandferApp />);
+  </script>
+</body>
+</html>
