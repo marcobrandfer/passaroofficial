@@ -735,18 +735,16 @@ Agora eu posso ver a luz novamente`
             onEnded={() => { setCurrentPlayingId(null); setCurrentTime(0); }}
           ></audio>
 
-          {/* Sticky Header - Centralizado */}
+          {/* Sticky Header - Logo no canto esquerdo original */}
           <header className="sticky top-0 z-40 bg-neutral-900/90 backdrop-blur-md border-b border-neutral-800 px-4 py-3 flex justify-between items-center">
-            <div className="w-1/4"></div>
-
-            <div className="flex items-center gap-2 justify-center w-2/4">
+            <div className="flex items-center gap-2">
               <i data-lucide="disc" className="w-6 h-6 text-amber-500 animate-spin"></i>
               <span className="font-extrabold tracking-wider text-lg uppercase bg-gradient-to-r from-amber-200 via-amber-400 to-amber-600 bg-clip-text text-transparent">
                 PASSARO <span className="text-amber-500 text-xs px-2 py-0.5 border border-amber-500 rounded-full font-mono">OFFICIAL</span>
               </span>
             </div>
             
-            <div className="flex items-center justify-end gap-3 w-1/4">
+            <div className="flex items-center gap-3">
               <button 
                 onClick={handleShareApp} 
                 className="text-neutral-300 hover:text-white bg-neutral-800 hover:bg-neutral-700 border border-neutral-700/60 px-3 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1.5"
@@ -768,7 +766,7 @@ Agora eu posso ver a luz novamente`
             </div>
           </header>
 
-          {/* Banner Hero com Vídeo 1:1 e Play Centralizado */}
+          {/* Banner Hero */}
           <section className="max-w-5xl mx-auto mt-6 px-4">
             <div className="bg-neutral-900 border border-neutral-800 rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row items-center">
               
@@ -834,20 +832,22 @@ Agora eu posso ver a luz novamente`
                     )}
 
                     <div>
+                      {/* Imagem de Capa 100% Limpa */}
                       <div className="relative aspect-square overflow-hidden bg-neutral-950">
                         <img 
                           src={track.cover} 
                           alt={track.title} 
                           className={`w-full h-full object-cover group-hover:scale-105 transition duration-500 ${!isUnlocked ? 'filter blur-sm opacity-40' : ''}`}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-transparent to-transparent"></div>
-                        
-                        <span className="absolute top-3 left-3 bg-neutral-950/80 backdrop-blur-md text-[10px] font-mono text-neutral-300 border border-neutral-800 px-2.5 py-1 rounded-full flex items-center gap-1 shadow-lg z-10">
-                          <i data-lucide="download" className="w-3 h-3 text-amber-500"></i> {count.toLocaleString('pt-BR')} Downloads
-                        </span>
                       </div>
 
                       <div className="p-4 space-y-3">
+                        {/* Contador de Downloads Movido para Baixo da Imagem */}
+                        <div className="flex items-center gap-1.5 text-neutral-400 text-[11px] font-mono border-b border-neutral-800 pb-2">
+                          <i data-lucide="download" className="w-3.5 h-3.5 text-amber-500"></i>
+                          <span className="font-bold text-neutral-300">{count.toLocaleString('pt-BR')}</span> downloads realizados
+                        </div>
+
                         <div className="flex justify-between items-start gap-2">
                           <div>
                             <span className="text-[10px] uppercase font-bold text-amber-500 tracking-wider">{track.subtitle}</span>
