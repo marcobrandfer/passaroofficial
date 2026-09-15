@@ -116,13 +116,13 @@
       );
     }
 
-    function MarcoBrandferApp() {
+    function PassaroApp() {
       const [currentPlayingId, setCurrentPlayingId] = useState(null);
       const [currentTime, setCurrentTime] = useState(0);
       const [duration, setDuration] = useState(0);
       
       const [isRegistered, setIsRegistered] = useState(() => {
-        return localStorage.getItem('mb_vip_registered') === 'true';
+        return localStorage.getItem('passaro_registered') === 'true' || localStorage.getItem('mb_vip_registered') === 'true';
       });
       const [vipName, setVipName] = useState('');
       const [vipLocation, setVipLocation] = useState('');
@@ -134,19 +134,25 @@
       const [userName, setUserName] = useState('');
       const [activeFansCount, setActiveFansCount] = useState(342);
 
-      const [unlockedTracks, setUnlockedTracks] = useState({
-        guardian: true,
-        raining_tears: false,
-        dark_clouds: false
+      const [unlockedTracks, setUnlockedTracks] = useState(() => {
+        const saved = JSON.parse(localStorage.getItem('passaro_unlocked_tracks') || '{}');
+        return {
+          tzipor: true,
+          guardian: saved.guardian === true,
+          raining_tears: saved.raining_tears === true,
+          dark_clouds: saved.dark_clouds === true
+        };
       });
 
       const [activeRiddle, setActiveRiddle] = useState(null);
       const [selectedOptionRiddle1, setSelectedOptionRiddle1] = useState('');
       const [selectedOptionRiddle2, setSelectedOptionRiddle2] = useState('');
+      const [selectedOptionRiddle3, setSelectedOptionRiddle3] = useState('');
       const [riddleError, setRiddleError] = useState('');
       const [riddleSuccessText, setRiddleSuccessText] = useState('');
 
       const [downloadCounts, setDownloadCounts] = useState({
+        tzipor: 0,
         guardian: 1240,
         raining_tears: 980,
         dark_clouds: 850
@@ -168,12 +174,21 @@
       const pixKey = "brandfer@hotmail.com"; 
 
       const socialLinks = {
-        instagram: "https://www.instagram.com/markobrandfer",
+        instagram: "https://www.instagram.com/passaroofficial",
         youtube: "https://www.youtube.com/@Brandfer",
         kofi: "https://ko-fi.com/marcobrandfer"
       };
 
       const tracks = [
+        {
+          id: 'tzipor',
+          title: 'Tzipor - Ha-Shomer',
+          subtitle: 'Abertura Oficial',
+          cover: './images/capaintro.jpg',
+          audioPreview: './audios/Passaro - Tzipor Ha-Shomer (Intro)(1).mp3',
+          downloadFile: './audios/Passaro - Tzipor Ha-Shomer (Intro)(1).mp3',
+          lyrics: null
+        },
         {
           id: 'guardian',
           title: 'The Guardian of Hidden Wisdom',
@@ -496,6 +511,14 @@ Agora eu posso ver a luz novamente`
       });
 
       useEffect(() => {
+        localStorage.setItem('passaro_unlocked_tracks', JSON.stringify({
+          guardian: unlockedTracks.guardian,
+          raining_tears: unlockedTracks.raining_tears,
+          dark_clouds: unlockedTracks.dark_clouds
+        }));
+      }, [unlockedTracks]);
+
+      useEffect(() => {
         if (SHEETDB_URL) {
           fetch(`${SHEETDB_URL}?sheet=Comments`)
             .then(res => res.json())
@@ -589,12 +612,12 @@ Agora eu posso ver a luz novamente`
               body: JSON.stringify({ data: [payload] })
             });
           }
-          localStorage.setItem('mb_vip_registered', 'true');
+          localStorage.setItem('passaro_registered', 'true');
           setIsRegistered(true);
           setActiveFansCount(prev => prev + 1);
         } catch (err) {
           console.error("Erro ao salvar cadastro VIP:", err);
-          localStorage.setItem('mb_vip_registered', 'true');
+          localStorage.setItem('passaro_registered', 'true');
           setIsRegistered(true);
         } finally {
           setIsSubmittingVip(false);
@@ -689,7 +712,7 @@ Agora eu posso ver a luz novamente`
       };
 
       const copyLyricsToClipboard = () => {
-        if (!selectedLyricsTrack) return;
+        if (!selectedLyricsTrack || !selectedLyricsTrack.lyrics) return;
         const textToCopy = selectedLyricsTrack.lyrics[lyricsLang];
         navigator.clipboard.writeText(textToCopy);
         setCopiedLyrics(true);
@@ -700,21 +723,32 @@ Agora eu posso ver a luz novamente`
         e.preventDefault();
         if (selectedOptionRiddle1 === 'B') {
           setRiddleError('');
-          setRiddleSuccessText("Você é o tempo. Você é a sua consciência. O Guardião não é só uma pessoa, é a alma, a consciência, é o ouvinte digno de carregar a verdade contida nos pergaminhos (The Scrolls of Old). Você provou ser digno. O Portal para Raining Tears está liberado!");
-          setUnlockedTracks(prev => ({ ...prev, raining_tears: true }));
+          setRiddleSuccessText("Você compreendeu o primeiro sinal. O Portal não guarda a verdade sozinho — existe alguém que vigia a passagem. The Guardian of Hidden Wisdom foi desbloqueada!");
+          setUnlockedTracks(prev => ({ ...prev, guardian: true }));
         } else {
-          setRiddleError("Resposta incorreta! Dica: Leia atenciosamente a letra de 'The Guardian of Hidden Wisdom'.");
+          setRiddleError("Resposta incorreta. Pense em quem permanece entre o buscador e a sabedoria, decidindo quem pode cruzar a linha.");
         }
       };
 
       const handleSolveRiddle2 = (e) => {
         e.preventDefault();
-        if (selectedOptionRiddle2 === 'C') {
+        if (selectedOptionRiddle2 === 'B') {
           setRiddleError('');
-          setRiddleSuccessText("Sua visão alcançou além das sombras. Você é a chama e a consciência que dissipa as Nuvens Negras. A faixa 'Dark Clouds' foi totalmente desbloqueada!");
+          setRiddleSuccessText("Os Pergaminhos Antigos permanecem nas mãos do Guardião. Você provou estar atento. Raining Tears foi desbloqueada!");
+          setUnlockedTracks(prev => ({ ...prev, raining_tears: true }));
+        } else {
+          setRiddleError("Resposta incorreta! Dica: leia atentamente a letra de The Guardian of Hidden Wisdom.");
+        }
+      };
+
+      const handleSolveRiddle3 = (e) => {
+        e.preventDefault();
+        if (selectedOptionRiddle3 === 'C') {
+          setRiddleError('');
+          setRiddleSuccessText("Sua visão alcançou além do que foi mostrado. A última passagem foi aberta. Dark Clouds foi desbloqueada!");
           setUnlockedTracks(prev => ({ ...prev, dark_clouds: true }));
         } else {
-          setRiddleError("Incorreto! Pense bem: quem é que escuta a música e desperta a sabedoria dentro de si?");
+          setRiddleError("Incorreto. Pense em quem está ouvindo, interpretando e atravessando cada Portal.");
         }
       };
 
@@ -724,6 +758,7 @@ Agora eu posso ver a luz novamente`
         setRiddleSuccessText('');
         setSelectedOptionRiddle1('');
         setSelectedOptionRiddle2('');
+        setSelectedOptionRiddle3('');
       };
 
       return (
@@ -766,50 +801,19 @@ Agora eu posso ver a luz novamente`
             </div>
           </header>
 
-          {/* Banner Hero */}
-          <section className="max-w-5xl mx-auto mt-6 px-4">
-            <div className="bg-neutral-900 border border-neutral-800 rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row items-center">
-              
-              <div className="w-full md:w-1/2 p-2 sm:p-4 bg-neutral-950 flex items-center justify-center">
-                <div className="relative w-full max-w-md aspect-square rounded-2xl overflow-hidden border border-amber-900/40 shadow-2xl bg-black">
-                  <video 
-                    src="./audios/intro.mp4" 
-                    controls
-                    className="w-full h-full object-cover rounded-2xl"
-                  ></video>
-                </div>
-              </div>
-
-              <div className="w-full md:w-1/2 p-6 md:p-10 space-y-4">
-                <span className="text-xs uppercase tracking-widest font-bold text-amber-500 flex items-center gap-2">
-                  <i data-lucide="flame" className="w-4 h-4 text-amber-500"></i> Seja Bem Vindo!!!
-                </span>
-                
-                <h2 className="text-2xl md:text-3xl font-black text-amber-400 tracking-wide uppercase">
-                  O PASSARO TE ESPERA...
-                </h2>
-
-                <p className="text-xs md:text-sm text-neutral-300 leading-relaxed italic">
-                  "Atravesse os portões ancestrais do conhecimento selado. Quem é o verdadeiro Guardião da Sabedoria Oculta?"
-                </p>
-
-                <p className="text-xs md:text-sm text-neutral-400 leading-relaxed">
-                  Ouça a introdução oficial, acompanhe as letras e resolva os ENIGMAS para desbloquear as próximas faixas em alta qualidade!
-                </p>
-              </div>
-            </div>
-          </section>
+          {/* A abertura audiovisual agora acontece exclusivamente em /portal/ */}
 
           {/* Decifre os Enigmas Ocultos */}
           <section className="max-w-5xl mx-auto my-12 px-4 space-y-6">
             <div className="text-center space-y-2">
+              <div className="text-[10px] uppercase tracking-[0.3em] font-bold text-amber-500 mb-2">Você atravessou a linha</div>
               <h1 className="text-3xl font-black uppercase tracking-tight text-white">Decifre os Enigmas de PASSARO</h1>
-              <p className="text-xs text-neutral-400 max-w-lg mx-auto leading-relaxed">
-                <strong className="text-amber-500">Dica:</strong> Para quebrar os selos das novas faixas, Ouça a Prévia e Acompanhe a Letra, as respostas podem estar lá!
+              <p className="text-xs text-neutral-400 max-w-xl mx-auto leading-relaxed">
+                <strong className="text-amber-500">Tzipor - Ha-Shomer</strong> é a primeira passagem. Ouça cada faixa, acompanhe as letras e decifre os ENIGMAS para quebrar os selos das próximas músicas.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {tracks.map((track, idx) => {
                 const isUnlocked = unlockedTracks[track.id];
                 const isThisPlaying = currentPlayingId === track.id;
@@ -854,14 +858,16 @@ Agora eu posso ver a luz novamente`
                             <h3 className="font-bold text-base text-white line-clamp-1">{track.title}</h3>
                           </div>
                           
-                          <button 
-                            onClick={() => { setSelectedLyricsTrack(track); setLyricsLang('en'); }}
-                            title="Ver Letra e Tradução"
-                            className="bg-neutral-800 hover:bg-neutral-700 text-neutral-300 p-2 rounded-xl transition flex items-center gap-1.5 border border-neutral-700/60 flex-shrink-0"
-                          >
-                            <i data-lucide="file-text" className="w-4 h-4 text-amber-500"></i>
-                            <span className="text-[10px] font-bold">Letra</span>
-                          </button>
+                          {track.lyrics && (
+                            <button 
+                              onClick={() => { setSelectedLyricsTrack(track); setLyricsLang('en'); }}
+                              title="Ver Letra e Tradução"
+                              className="bg-neutral-800 hover:bg-neutral-700 text-neutral-300 p-2 rounded-xl transition flex items-center gap-1.5 border border-neutral-700/60 flex-shrink-0"
+                            >
+                              <i data-lucide="file-text" className="w-4 h-4 text-amber-500"></i>
+                              <span className="text-[10px] font-bold">Letra</span>
+                            </button>
+                          )}
                         </div>
 
                         {isUnlocked ? (
@@ -905,10 +911,14 @@ Agora eu posso ver a luz novamente`
                         ) : (
                           <div className="bg-neutral-950 border border-amber-900/30 p-4 rounded-xl text-center space-y-3">
                             <p className="text-xs text-amber-200/80 font-medium leading-relaxed">
-                              {idx === 1 ? "Decifre o Enigma da Faixa 1 para revelar o portal de Raining Tears!" : "Decifre o Enigma do Guardião Supremo para liberar Dark Clouds!"}
+                              {idx === 1
+                                ? "Decifre o primeiro Enigma para revelar The Guardian of Hidden Wisdom!"
+                                : idx === 2
+                                  ? "Compreenda o segredo do Guardião para revelar o portal de Raining Tears!"
+                                  : "Atravesse Raining Tears e decifre o último Enigma para liberar Dark Clouds!"}
                             </p>
                             <button 
-                              onClick={() => setActiveRiddle(idx === 1 ? 'riddle1' : 'riddle2')}
+                              onClick={() => setActiveRiddle(idx === 1 ? 'riddle1' : idx === 2 ? 'riddle2' : 'riddle3')}
                               className="w-full bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-black font-extrabold text-xs py-2.5 rounded-xl transition shadow-lg shadow-amber-950/50 flex items-center justify-center gap-2 uppercase tracking-wider"
                             >
                               <i data-lucide="key" className="w-4 h-4"></i>
@@ -1278,7 +1288,7 @@ Agora eu posso ver a luz novamente`
             </div>
           )}
 
-          {/* MODAL ENIGMA #1 */}
+          {/* MODAL ENIGMA #1 — TZIPOR -> GUARDIAN */}
           {activeRiddle === 'riddle1' && (
             <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
               <div className="bg-neutral-900 border border-amber-500/40 w-full max-w-lg rounded-2xl p-6 space-y-5 shadow-2xl">
@@ -1288,13 +1298,54 @@ Agora eu posso ver a luz novamente`
                   </span>
                   <button onClick={closeRiddleModal} className="text-neutral-400 hover:text-white">✕</button>
                 </div>
-
                 {!riddleSuccessText ? (
                   <form onSubmit={handleSolveRiddle1} className="space-y-4">
                     <p className="text-sm font-semibold text-neutral-200 leading-relaxed">
-                      "Nas sombras profundas, ele guarda a sabedoria que a humanidade esqueceu. 'He is the watchmen!' Mas o que o Guardião realmente protege nas mãos?"
+                      "Não sou a sabedoria, mas permaneço entre ela e aqueles que a procuram. Não sou a chave, mas decido quem pode cruzar a linha. Em silêncio, vigio aquilo que não deve ser entregue a qualquer um. Quem sou eu?"
                     </p>
+                    <div className="space-y-2">
+                      {[
+                        { id: 'A', text: 'A) O próprio Portal' },
+                        { id: 'B', text: 'B) O Guardião' },
+                        { id: 'C', text: 'C) O Vento Antigo' },
+                        { id: 'D', text: 'D) O Pergaminho' }
+                      ].map((opt) => (
+                        <label key={opt.id} className={`flex items-center gap-3 p-3 rounded-xl border text-xs cursor-pointer transition ${selectedOptionRiddle1 === opt.id ? 'bg-amber-950/60 border-amber-500 text-white font-bold' : 'bg-neutral-950 border-neutral-800 text-neutral-300 hover:border-neutral-700'}`}>
+                          <input type="radio" name="riddle1" value={opt.id} checked={selectedOptionRiddle1 === opt.id} onChange={(e) => setSelectedOptionRiddle1(e.target.value)} className="accent-amber-500" />
+                          <span>{opt.text}</span>
+                        </label>
+                      ))}
+                    </div>
+                    {riddleError && <p className="text-xs text-red-500 font-bold">{riddleError}</p>}
+                    <button type="submit" disabled={!selectedOptionRiddle1} className="w-full bg-amber-500 hover:bg-amber-400 text-black font-extrabold py-3 rounded-xl text-xs uppercase tracking-wider transition disabled:opacity-50">
+                      Quebrar o Primeiro Selo
+                    </button>
+                  </form>
+                ) : (
+                  <div className="space-y-4 text-center">
+                    <div className="w-12 h-12 bg-amber-500/20 text-amber-500 rounded-full flex items-center justify-center mx-auto text-2xl">🔓</div>
+                    <h3 className="font-extrabold text-lg text-white uppercase">Selo Quebrado!</h3>
+                    <p className="text-xs text-neutral-300 leading-relaxed bg-neutral-950 p-4 rounded-xl border border-neutral-800">"{riddleSuccessText}"</p>
+                    <button onClick={closeRiddleModal} className="w-full bg-amber-500 hover:bg-amber-400 text-black font-extrabold py-3 rounded-xl text-xs uppercase transition">Ouvir The Guardian Agora</button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
+          {/* MODAL ENIGMA #2 — GUARDIAN -> RAINING TEARS */}
+          {activeRiddle === 'riddle2' && (
+            <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+              <div className="bg-neutral-900 border border-amber-500/40 w-full max-w-lg rounded-2xl p-6 space-y-5 shadow-2xl">
+                <div className="flex justify-between items-center border-b border-neutral-800 pb-3">
+                  <span className="text-xs font-bold uppercase text-amber-500 flex items-center gap-2"><i data-lucide="shield-alert" className="w-4 h-4"></i> Enigma de Desbloqueio #2</span>
+                  <button onClick={closeRiddleModal} className="text-neutral-400 hover:text-white">✕</button>
+                </div>
+                {!riddleSuccessText ? (
+                  <form onSubmit={handleSolveRiddle2} className="space-y-4">
+                    <p className="text-sm font-semibold text-neutral-200 leading-relaxed">
+                      "Nas sombras profundas, ele guarda a sabedoria que a humanidade esqueceu. 'He is the watchmen!' Mas o que o Guardião realmente protege em suas mãos?"
+                    </p>
                     <div className="space-y-2">
                       {[
                         { id: 'A', text: 'A) Uma espada de ouro' },
@@ -1302,128 +1353,62 @@ Agora eu posso ver a luz novamente`
                         { id: 'C', text: 'C) Uma coroa de prata' },
                         { id: 'D', text: 'D) O Trono de Ferro' }
                       ].map((opt) => (
-                        <label 
-                          key={opt.id} 
-                          className={`flex items-center gap-3 p-3 rounded-xl border text-xs cursor-pointer transition ${
-                            selectedOptionRiddle1 === opt.id 
-                              ? 'bg-amber-950/60 border-amber-500 text-white font-bold' 
-                              : 'bg-neutral-950 border-neutral-800 text-neutral-300 hover:border-neutral-700'
-                          }`}
-                        >
-                          <input 
-                            type="radio" 
-                            name="riddle1" 
-                            value={opt.id}
-                            checked={selectedOptionRiddle1 === opt.id}
-                            onChange={(e) => setSelectedOptionRiddle1(e.target.value)}
-                            className="accent-amber-500"
-                          />
+                        <label key={opt.id} className={`flex items-center gap-3 p-3 rounded-xl border text-xs cursor-pointer transition ${selectedOptionRiddle2 === opt.id ? 'bg-amber-950/60 border-amber-500 text-white font-bold' : 'bg-neutral-950 border-neutral-800 text-neutral-300 hover:border-neutral-700'}`}>
+                          <input type="radio" name="riddle2" value={opt.id} checked={selectedOptionRiddle2 === opt.id} onChange={(e) => setSelectedOptionRiddle2(e.target.value)} className="accent-amber-500" />
                           <span>{opt.text}</span>
                         </label>
                       ))}
                     </div>
-
                     {riddleError && <p className="text-xs text-red-500 font-bold">{riddleError}</p>}
-
-                    <button 
-                      type="submit" 
-                      disabled={!selectedOptionRiddle1}
-                      className="w-full bg-amber-500 hover:bg-amber-400 text-black font-extrabold py-3 rounded-xl text-xs uppercase tracking-wider transition disabled:opacity-50"
-                    >
-                      Quebrar o Selo
-                    </button>
+                    <button type="submit" disabled={!selectedOptionRiddle2} className="w-full bg-amber-500 hover:bg-amber-400 text-black font-extrabold py-3 rounded-xl text-xs uppercase tracking-wider transition disabled:opacity-50">Quebrar o Segundo Selo</button>
                   </form>
                 ) : (
                   <div className="space-y-4 text-center">
-                    <div className="w-12 h-12 bg-amber-500/20 text-amber-500 rounded-full flex items-center justify-center mx-auto text-2xl">
-                      🔓
-                    </div>
+                    <div className="w-12 h-12 bg-amber-500/20 text-amber-500 rounded-full flex items-center justify-center mx-auto text-2xl">🔓</div>
                     <h3 className="font-extrabold text-lg text-white uppercase">Selo Quebrado!</h3>
-                    <p className="text-xs text-neutral-300 leading-relaxed bg-neutral-950 p-4 rounded-xl border border-neutral-800">
-                      "{riddleSuccessText}"
-                    </p>
-                    <button 
-                      onClick={closeRiddleModal} 
-                      className="w-full bg-amber-500 hover:bg-amber-400 text-black font-extrabold py-3 rounded-xl text-xs uppercase transition"
-                    >
-                      Ouvir Raining Tears Agora
-                    </button>
+                    <p className="text-xs text-neutral-300 leading-relaxed bg-neutral-950 p-4 rounded-xl border border-neutral-800">"{riddleSuccessText}"</p>
+                    <button onClick={closeRiddleModal} className="w-full bg-amber-500 hover:bg-amber-400 text-black font-extrabold py-3 rounded-xl text-xs uppercase transition">Ouvir Raining Tears Agora</button>
                   </div>
                 )}
               </div>
             </div>
           )}
 
-          {/* MODAL ENIGMA #2 */}
-          {activeRiddle === 'riddle2' && (
+          {/* MODAL ENIGMA #3 — RAINING TEARS -> DARK CLOUDS */}
+          {activeRiddle === 'riddle3' && (
             <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
               <div className="bg-neutral-900 border border-amber-500/40 w-full max-w-lg rounded-2xl p-6 space-y-5 shadow-2xl">
                 <div className="flex justify-between items-center border-b border-neutral-800 pb-3">
-                  <span className="text-xs font-bold uppercase text-amber-500 flex items-center gap-2">
-                    <i data-lucide="shield-alert" className="w-4 h-4"></i> Enigma de Desbloqueio #2
-                  </span>
+                  <span className="text-xs font-bold uppercase text-amber-500 flex items-center gap-2"><i data-lucide="shield-alert" className="w-4 h-4"></i> Enigma de Desbloqueio #3</span>
                   <button onClick={closeRiddleModal} className="text-neutral-400 hover:text-white">✕</button>
                 </div>
-
                 {!riddleSuccessText ? (
-                  <form onSubmit={handleSolveRiddle2} className="space-y-4">
+                  <form onSubmit={handleSolveRiddle3} className="space-y-4">
                     <p className="text-sm font-semibold text-neutral-200 leading-relaxed">
-                      "Ele é quem vigia além da noite, protegendo a sabedoria oculta... Quem é o verdadeiro Guardião da Sabedoria Oculta?"
+                      "Depois de testemunhar um mundo afogado em lágrimas, existe uma verdade que nenhum Guardião pode revelar por você. Quem precisa enxergar além das sombras para que a sabedoria realmente desperte?"
                     </p>
-
                     <div className="space-y-2">
                       {[
-                        { id: 'A', text: 'A) Um guerreiro esquecido das lendas' },
-                        { id: 'B', text: 'B) O Rei dos Ventos Antigos' },
-                        { id: 'C', text: 'C) Você mesmo (O ouvinte / A sua consciência)' },
-                        { id: 'D', text: 'D) O próprio vilão das sombras' }
+                        { id: 'A', text: 'A) Um rei acima dos homens' },
+                        { id: 'B', text: 'B) O próprio Portal' },
+                        { id: 'C', text: 'C) Você — o ouvinte e a sua consciência' },
+                        { id: 'D', text: 'D) Uma antiga profecia' }
                       ].map((opt) => (
-                        <label 
-                          key={opt.id} 
-                          className={`flex items-center gap-3 p-3 rounded-xl border text-xs cursor-pointer transition ${
-                            selectedOptionRiddle2 === opt.id 
-                              ? 'bg-amber-950/60 border-amber-500 text-white font-bold' 
-                              : 'bg-neutral-950 border-neutral-800 text-neutral-300 hover:border-neutral-700'
-                          }`}
-                        >
-                          <input 
-                            type="radio" 
-                            name="riddle2" 
-                            value={opt.id}
-                            checked={selectedOptionRiddle2 === opt.id}
-                            onChange={(e) => setSelectedOptionRiddle2(e.target.value)}
-                            className="accent-amber-500"
-                          />
+                        <label key={opt.id} className={`flex items-center gap-3 p-3 rounded-xl border text-xs cursor-pointer transition ${selectedOptionRiddle3 === opt.id ? 'bg-amber-950/60 border-amber-500 text-white font-bold' : 'bg-neutral-950 border-neutral-800 text-neutral-300 hover:border-neutral-700'}`}>
+                          <input type="radio" name="riddle3" value={opt.id} checked={selectedOptionRiddle3 === opt.id} onChange={(e) => setSelectedOptionRiddle3(e.target.value)} className="accent-amber-500" />
                           <span>{opt.text}</span>
                         </label>
                       ))}
                     </div>
-
                     {riddleError && <p className="text-xs text-red-500 font-bold">{riddleError}</p>}
-
-                    <button 
-                      type="submit" 
-                      disabled={!selectedOptionRiddle2}
-                      className="w-full bg-amber-500 hover:bg-amber-400 text-black font-extrabold py-3 rounded-xl text-xs uppercase tracking-wider transition disabled:opacity-50"
-                    >
-                      Revelar Segredo
-                    </button>
+                    <button type="submit" disabled={!selectedOptionRiddle3} className="w-full bg-amber-500 hover:bg-amber-400 text-black font-extrabold py-3 rounded-xl text-xs uppercase tracking-wider transition disabled:opacity-50">Quebrar o Terceiro Selo</button>
                   </form>
                 ) : (
                   <div className="space-y-4 text-center">
-                    <div className="w-12 h-12 bg-amber-500/20 text-amber-500 rounded-full flex items-center justify-center mx-auto text-2xl">
-                      ⚡
-                    </div>
+                    <div className="w-12 h-12 bg-amber-500/20 text-amber-500 rounded-full flex items-center justify-center mx-auto text-2xl">⚡</div>
                     <h3 className="font-extrabold text-lg text-white uppercase">Acesso Concedido!</h3>
-                    <p className="text-xs text-neutral-300 leading-relaxed bg-neutral-950 p-4 rounded-xl border border-neutral-800">
-                      "{riddleSuccessText}"
-                    </p>
-                    <button 
-                      onClick={closeRiddleModal} 
-                      className="w-full bg-amber-500 hover:bg-amber-400 text-black font-extrabold py-3 rounded-xl text-xs uppercase transition"
-                    >
-                      Ouvir Dark Clouds Agora
-                    </button>
+                    <p className="text-xs text-neutral-300 leading-relaxed bg-neutral-950 p-4 rounded-xl border border-neutral-800">"{riddleSuccessText}"</p>
+                    <button onClick={closeRiddleModal} className="w-full bg-amber-500 hover:bg-amber-400 text-black font-extrabold py-3 rounded-xl text-xs uppercase transition">Ouvir Dark Clouds Agora</button>
                   </div>
                 )}
               </div>
@@ -1435,7 +1420,7 @@ Agora eu posso ver a luz novamente`
     }
 
     const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<MarcoBrandferApp />);
+    root.render(<PassaroApp />);
   </script>
 </body>
 </html>
