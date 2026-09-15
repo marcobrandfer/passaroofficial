@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+Ôªø<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -8,7 +8,7 @@
     content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   >
 
-  <title>PASSARO ó O Portal</title>
+  <title>PASSARO ‚Äî O Portal</title>
 
   <style>
     * {
@@ -48,7 +48,7 @@
 
 
     /* ======================================================
-       TELA 1 ó PORTAL SELADO
+       TELA 1 ‚Äî PORTAL SELADO
     ====================================================== */
 
     #portalScreen {
@@ -68,9 +68,9 @@
     /*
       BACKGROUND DO PORTAL
 
-      Como este index.html est· dentro de /portal
-      e a imagem est· dentro de /images,
-      o caminho correto È:
+      Como este index.html est√° dentro de /portal
+      e a imagem est√° dentro de /images,
+      o caminho correto √©:
 
       ../images/capaintro.jpg
     */
@@ -103,7 +103,7 @@
 
     /*
       VINHETA NAS BORDAS
-      MantÈm o centro/porta visÌvel.
+      Mant√©m o centro/porta vis√≠vel.
     */
 
     .portal-vignette {
@@ -249,7 +249,7 @@
 
 
     /* ======================================================
-       BOT’ES
+       BOT√ïES
     ====================================================== */
 
     .unlock-button,
@@ -342,7 +342,7 @@
 
 
     /* ======================================================
-       TELA 2 ó CHAVE RECONHECIDA
+       TELA 2 ‚Äî CHAVE RECONHECIDA
     ====================================================== */
 
     #recognitionScreen {
@@ -391,7 +391,7 @@
 
 
     /* ======================================================
-       TELA 3 ó VÕDEO
+       TELA 3 ‚Äî V√çDEO
     ====================================================== */
 
     #videoScreen {
@@ -421,7 +421,7 @@
 
 
     /* ======================================================
-       TELA 4 ó PORTAL ABERTO
+       TELA 4 ‚Äî PORTAL ABERTO
     ====================================================== */
 
     #finalScreen {
@@ -505,7 +505,7 @@
 
 
     /* ======================================================
-       ANIMA«’ES
+       ANIMA√á√ïES
     ====================================================== */
 
     @keyframes appear {
@@ -611,7 +611,7 @@
 
 
   <!-- =====================================================
-       TELA 1 ó PORTAL SELADO
+       TELA 1 ‚Äî PORTAL SELADO
   ====================================================== -->
 
   <main id="portalScreen">
@@ -680,7 +680,7 @@
 
 
   <!-- =====================================================
-       TELA 2 ó CHAVE RECONHECIDA
+       TELA 2 ‚Äî CHAVE RECONHECIDA
   ====================================================== -->
 
   <section id="recognitionScreen">
@@ -694,7 +694,7 @@
 
 
   <!-- =====================================================
-       TELA 3 ó VÕDEO TZIPOR HA-SHOMER
+       TELA 3 ‚Äî V√çDEO TZIPOR HA-SHOMER
   ====================================================== -->
 
   <section id="videoScreen">
@@ -710,7 +710,7 @@
         type="video/mp4"
       >
 
-      Seu navegador n„o suporta reproduÁ„o de vÌdeo.
+      Seu navegador n√£o suporta reprodu√ß√£o de v√≠deo.
 
     </video>
 
@@ -719,7 +719,7 @@
 
 
   <!-- =====================================================
-       TELA 4 ó PORTAL ABERTO
+       TELA 4 ‚Äî PORTAL ABERTO
   ====================================================== -->
 
   <section id="finalScreen">
@@ -732,12 +732,12 @@
 
 
       <h2 class="final-title">
-        O PORTAL EST¡ ABERTO
+        O PORTAL EST√Å ABERTO
       </h2>
 
 
       <p class="final-text">
-        O Guardi„o permitiu sua passagem.
+        O Guardi√£o permitiu sua passagem.
       </p>
 
 
@@ -758,7 +758,7 @@
   <script>
 
     /* =====================================================
-       CHAVES V¡LIDAS
+       CHAVES V√ÅLIDAS
     ====================================================== */
 
     const VALID_KEYS = {
@@ -808,7 +808,7 @@
 
 
     /* =====================================================
-       NORMALIZA«√O DA CHAVE
+       NORMALIZA√á√ÉO DA CHAVE
     ====================================================== */
 
     function normalizeKey(value) {
@@ -828,7 +828,7 @@
     function invalidKey() {
 
       message.innerHTML =
-        "A CHAVE N√O FOI RECONHECIDA.<br>O Portal permanece selado.";
+        "A CHAVE N√ÉO FOI RECONHECIDA.<br>O Portal permanece selado.";
 
 
       portalBox.classList.remove("error");
@@ -888,7 +888,7 @@
 
 
       /*
-        Prepara vÌdeo com ·udio.
+        Prepara v√≠deo com √°udio.
       */
 
       portalVideo.currentTime = 0;
@@ -913,7 +913,7 @@
 
 
       /*
-        Inicia o vÌdeo apÛs 1,2 segundo.
+        Inicia o v√≠deo ap√≥s 1,2 segundo.
       */
 
       setTimeout(async () => {
@@ -938,14 +938,14 @@
 
 
           console.log(
-            "ReproduÁ„o autom·tica bloqueada:",
+            "Reprodu√ß√£o autom√°tica bloqueada:",
             error
           );
 
 
           /*
             Fallback para navegadores que
-            eventualmente bloquearem o vÌdeo.
+            eventualmente bloquearem o v√≠deo.
           */
 
           videoScreen.style.cursor = "pointer";
@@ -988,7 +988,7 @@
 
 
     /* =====================================================
-       QUANDO O VÕDEO TERMINAR
+       QUANDO O V√çDEO TERMINAR
     ====================================================== */
 
     portalVideo.addEventListener(
@@ -1020,7 +1020,7 @@
 
 
     /* =====================================================
-       BOT√O ATRAVESSAR
+       BOT√ÉO ATRAVESSAR
     ====================================================== */
 
     crossButton.addEventListener(
@@ -1030,7 +1030,7 @@
 
         /*
           Registra que a travessia
-          foi concluÌda.
+          foi conclu√≠da.
         */
 
         localStorage.setItem(
@@ -1057,7 +1057,7 @@
 
 
     /* =====================================================
-       BOT√O DESBLOQUEAR
+       BOT√ÉO DESBLOQUEAR
     ====================================================== */
 
     unlockButton.addEventListener(
@@ -1067,7 +1067,7 @@
 
 
     /* =====================================================
-       ENTER TAMB…M DESBLOQUEIA
+       ENTER TAMB√âM DESBLOQUEIA
     ====================================================== */
 
     portalKey.addEventListener(
@@ -1087,7 +1087,7 @@
 
 
     /* =====================================================
-       DIGITA«√O AUTOMATICAMENTE EM MAI⁄SCULAS
+       DIGITA√á√ÉO AUTOMATICAMENTE EM MAI√öSCULAS
     ====================================================== */
 
     portalKey.addEventListener(
@@ -1107,7 +1107,7 @@
 
 
     /* =====================================================
-       PR…-CARREGA O VÕDEO
+       PR√â-CARREGA O V√çDEO
     ====================================================== */
 
     window.addEventListener(
