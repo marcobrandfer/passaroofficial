@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
+
+  <title>PASSARO — O Portal</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --gold: #d6ad5b;
+      --gold-light: #f1d28c;
+      --dark-gold: #8b6a32;
+      --text: #eee7d8;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      background: #000;
+      color: var(--text);
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    body {
+      overflow-x: hidden;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+
+    /* ======================================================
+       TELA 1 — PORTAL SELADO
+    ====================================================== */
+
+    #portalScreen {
+      position: relative;
+      min-height: 100svh;
+      width: 100%;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      overflow: hidden;
+      background: #000;
+    }
+
+
+    /*
+      BACKGROUND DO PORTAL
+
+      Como este index.html está dentro de /portal
+      e a imagem está dentro de /images,
+      o caminho correto é:
+
+      ../images/capaintro.jpg
+    */
+
+    .portal-background {
+      position: absolute;
+      inset: 0;
+
+      background-image:
+        linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.18) 0%,
+          rgba(0, 0, 0, 0.05) 35%,
+          rgba(0, 0, 0, 0.15) 60%,
+          rgba(0, 0, 0, 0.70) 100%
+        ),
+        url("../images/capaintro.jpg");
+
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+
+      transform: scale(1.02);
+
+      transition:
+        opacity 1.4s ease,
+        transform 5s ease;
+    }
+
+
+    /*
+      VINHETA NAS BORDAS
+      Mantém o centro/porta visível.
+    */
+
+    .portal-vignette {
+      position: absolute;
+      inset: 0;
+
+      pointer-events: none;
+
+      background:
+        radial-gradient(
+          circle at center,
+          transparent 30%,
+          rgba(0, 0, 0, 0.12) 58%,
+          rgba(0, 0, 0, 0.58) 100%
+        );
+    }
+
+
+    .portal-content {
+      position: relative;
+      z-index: 5;
+
+      width: min(92%, 500px);
+
+      padding: 32px 24px;
+
+      text-align: center;
+
+      animation: appear 1.8s ease both;
+    }
+
+
+    .brand {
+      margin-bottom: 34px;
+
+      font-family: Arial, Helvetica, sans-serif;
+
+      font-size: clamp(2rem, 8vw, 3.4rem);
+      font-weight: 900;
+      letter-spacing: 0.22em;
+
+      color: #fff;
+
+      text-shadow:
+        0 3px 10px rgba(0, 0, 0, 1),
+        0 0 30px rgba(214, 173, 91, 0.22);
+    }
+
+
+    .portal-box {
+      padding: 28px 22px;
+
+      border: 1px solid rgba(214, 173, 91, 0.42);
+      border-radius: 4px;
+
+      background:
+        linear-gradient(
+          180deg,
+          rgba(5, 5, 5, 0.68),
+          rgba(0, 0, 0, 0.82)
+        );
+
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+
+      box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.65),
+        inset 0 0 30px rgba(214, 173, 91, 0.025);
+    }
+
+
+    .portal-title {
+      margin-bottom: 10px;
+
+      font-size: clamp(1.35rem, 5vw, 1.8rem);
+      font-weight: 500;
+      letter-spacing: 0.12em;
+
+      color: var(--gold-light);
+
+      text-shadow:
+        0 2px 8px rgba(0, 0, 0, 1);
+    }
+
+
+    .portal-subtitle {
+      margin: 0 auto 24px;
+
+      max-width: 360px;
+
+      font-size: 1rem;
+      line-height: 1.55;
+
+      color: rgba(255, 255, 255, 0.82);
+    }
+
+
+    /* ======================================================
+       CAMPO DA CHAVE
+    ====================================================== */
+
+    .key-input {
+      width: 100%;
+      height: 54px;
+
+      padding: 0 18px;
+
+      text-align: center;
+      text-transform: uppercase;
+
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+
+      color: #fff;
+
+      border: 1px solid rgba(214, 173, 91, 0.60);
+      border-radius: 3px;
+
+      outline: none;
+
+      background: rgba(0, 0, 0, 0.72);
+
+      transition:
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+    }
+
+
+    .key-input::placeholder {
+      color: rgba(255, 255, 255, 0.32);
+    }
+
+
+    .key-input:focus {
+      border-color: var(--gold-light);
+
+      box-shadow:
+        0 0 0 1px rgba(214, 173, 91, 0.18),
+        0 0 24px rgba(214, 173, 91, 0.18);
+    }
+
+
+    /* ======================================================
+       BOTÕES
+    ====================================================== */
+
+    .unlock-button,
+    .cross-button {
+      width: 100%;
+      min-height: 54px;
+
+      margin-top: 14px;
+      padding: 14px 20px;
+
+      border: 1px solid var(--gold);
+      border-radius: 3px;
+
+      cursor: pointer;
+
+      font-family: Arial, Helvetica, sans-serif;
+
+      font-weight: 800;
+      font-size: 0.9rem;
+      letter-spacing: 0.15em;
+
+      color: #111;
+
+      background:
+        linear-gradient(
+          135deg,
+          #b88a3c,
+          #efd084,
+          #a97930
+        );
+
+      box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.45);
+
+      transition:
+        transform 0.2s ease,
+        filter 0.2s ease,
+        box-shadow 0.2s ease;
+    }
+
+
+    .unlock-button:hover,
+    .cross-button:hover {
+      filter: brightness(1.1);
+
+      transform: translateY(-1px);
+
+      box-shadow:
+        0 12px 34px rgba(214, 173, 91, 0.20);
+    }
+
+
+    .unlock-button:active,
+    .cross-button:active {
+      transform: translateY(1px);
+    }
+
+
+    .portal-phrase {
+      margin-top: 21px;
+
+      font-size: 0.86rem;
+      font-style: italic;
+      letter-spacing: 0.04em;
+
+      color: rgba(255, 255, 255, 0.50);
+    }
+
+
+    #message {
+      min-height: 22px;
+
+      margin-top: 16px;
+
+      font-family: Arial, Helvetica, sans-serif;
+
+      font-size: 0.78rem;
+      font-weight: 700;
+
+      line-height: 1.45;
+      letter-spacing: 0.08em;
+
+      color: #d3b066;
+    }
+
+
+    .error {
+      animation: shake 0.35s ease;
+    }
+
+
+    /* ======================================================
+       TELA 2 — CHAVE RECONHECIDA
+    ====================================================== */
+
+    #recognitionScreen {
+      position: fixed;
+      z-index: 20;
+
+      inset: 0;
+
+      display: none;
+
+      justify-content: center;
+      align-items: center;
+
+      padding: 24px;
+
+      text-align: center;
+
+      background: #000;
+
+      opacity: 0;
+
+      transition: opacity 0.7s ease;
+    }
+
+
+    #recognitionScreen.show {
+      opacity: 1;
+    }
+
+
+    .recognition-text {
+      color: var(--gold-light);
+
+      font-size: clamp(1.35rem, 6vw, 2.3rem);
+
+      letter-spacing: 0.15em;
+
+      font-weight: 400;
+
+      text-shadow:
+        0 0 30px rgba(214, 173, 91, 0.25);
+
+      animation:
+        recognitionGlow 1.5s ease-in-out infinite alternate;
+    }
+
+
+    /* ======================================================
+       TELA 3 — VÍDEO
+    ====================================================== */
+
+    #videoScreen {
+      position: fixed;
+
+      z-index: 30;
+
+      inset: 0;
+
+      display: none;
+
+      justify-content: center;
+      align-items: center;
+
+      background: #000;
+    }
+
+
+    #portalVideo {
+      width: 100%;
+      height: 100%;
+
+      object-fit: contain;
+
+      background: #000;
+    }
+
+
+    /* ======================================================
+       TELA 4 — PORTAL ABERTO
+    ====================================================== */
+
+    #finalScreen {
+      position: fixed;
+
+      z-index: 40;
+
+      inset: 0;
+
+      display: none;
+
+      justify-content: center;
+      align-items: center;
+
+      padding: 28px;
+
+      text-align: center;
+
+      background:
+        radial-gradient(
+          circle at 50% 40%,
+          rgba(120, 88, 32, 0.16),
+          rgba(0, 0, 0, 0.96) 55%,
+          #000 100%
+        );
+
+      opacity: 0;
+
+      transition: opacity 1.5s ease;
+    }
+
+
+    #finalScreen.show {
+      opacity: 1;
+    }
+
+
+    .final-content {
+      width: min(92%, 460px);
+    }
+
+
+    .final-symbol {
+      margin-bottom: 20px;
+
+      font-size: 1rem;
+      letter-spacing: 0.6em;
+
+      color: var(--dark-gold);
+    }
+
+
+    .final-title {
+      margin-bottom: 16px;
+
+      font-size: clamp(1.6rem, 7vw, 2.6rem);
+
+      font-weight: 400;
+      letter-spacing: 0.12em;
+
+      color: var(--gold-light);
+
+      text-shadow:
+        0 0 35px rgba(214, 173, 91, 0.22);
+    }
+
+
+    .final-text {
+      margin-bottom: 24px;
+
+      font-size: 1rem;
+      line-height: 1.6;
+
+      color: rgba(255, 255, 255, 0.68);
+    }
+
+
+    .cross-button {
+      max-width: 360px;
+    }
+
+
+    /* ======================================================
+       ANIMAÇÕES
+    ====================================================== */
+
+    @keyframes appear {
+
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+    }
+
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      25% {
+        transform: translateX(-6px);
+      }
+
+      50% {
+        transform: translateX(6px);
+      }
+
+      75% {
+        transform: translateX(-3px);
+      }
+
+    }
+
+
+    @keyframes recognitionGlow {
+
+      from {
+        opacity: 0.7;
+
+        text-shadow:
+          0 0 15px rgba(214, 173, 91, 0.12);
+      }
+
+      to {
+        opacity: 1;
+
+        text-shadow:
+          0 0 40px rgba(214, 173, 91, 0.38);
+      }
+
+    }
+
+
+    /* ======================================================
+       MOBILE
+    ====================================================== */
+
+    @media (max-width: 600px) {
+
+      .portal-background {
+        background-position: center center;
+      }
+
+      .portal-content {
+        width: 94%;
+        padding: 20px 12px;
+      }
+
+      .brand {
+        margin-bottom: 24px;
+        letter-spacing: 0.15em;
+      }
+
+      .portal-box {
+        padding: 24px 18px;
+      }
+
+      .portal-subtitle {
+        font-size: 0.94rem;
+      }
+
+    }
+
+
+    @media (min-width: 900px) {
+
+      #portalVideo {
+        width: min(100%, 1080px);
+      }
+
+    }
+
+  </style>
+</head>
+
+
+<body>
+
+
+  <!-- =====================================================
+       TELA 1 — PORTAL SELADO
+  ====================================================== -->
+
+  <main id="portalScreen">
+
+    <div class="portal-background"></div>
+
+    <div class="portal-vignette"></div>
+
+
+    <section class="portal-content">
+
+      <div class="brand">
+        PASSARO
+      </div>
+
+
+      <div
+        class="portal-box"
+        id="portalBox"
+      >
+
+        <h1 class="portal-title">
+          PORTAL FECHADO
+        </h1>
+
+
+        <p class="portal-subtitle">
+          Apresente a Chave que lhe foi confiada.
+        </p>
+
+
+        <input
+          type="text"
+          id="portalKey"
+          class="key-input"
+          placeholder="CHAVE DO PORTAL"
+          autocomplete="off"
+          autocapitalize="characters"
+          spellcheck="false"
+          maxlength="30"
+        >
+
+
+        <button
+          id="unlockButton"
+          class="unlock-button"
+          type="button"
+        >
+          DESBLOQUEAR O PORTAL
+        </button>
+
+
+        <div id="message"></div>
+
+
+        <p class="portal-phrase">
+          Only the worthy may cross the line.
+        </p>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+
+  <!-- =====================================================
+       TELA 2 — CHAVE RECONHECIDA
+  ====================================================== -->
+
+  <section id="recognitionScreen">
+
+    <div class="recognition-text">
+      CHAVE RECONHECIDA
+    </div>
+
+  </section>
+
+
+
+  <!-- =====================================================
+       TELA 3 — VÍDEO TZIPOR HA-SHOMER
+  ====================================================== -->
+
+  <section id="videoScreen">
+
+    <video
+      id="portalVideo"
+      preload="auto"
+      playsinline
+    >
+
+      <source
+        src="../audios/intro.mp4"
+        type="video/mp4"
+      >
+
+      Seu navegador não suporta reprodução de vídeo.
+
+    </video>
+
+  </section>
+
+
+
+  <!-- =====================================================
+       TELA 4 — PORTAL ABERTO
+  ====================================================== -->
+
+  <section id="finalScreen">
+
+    <div class="final-content">
+
+      <div class="final-symbol">
+        11&nbsp;&nbsp;|&nbsp;&nbsp;11
+      </div>
+
+
+      <h2 class="final-title">
+        O PORTAL ESTÁ ABERTO
+      </h2>
+
+
+      <p class="final-text">
+        O Guardião permitiu sua passagem.
+      </p>
+
+
+      <button
+        id="crossButton"
+        class="cross-button"
+        type="button"
+      >
+        ATRAVESSAR
+      </button>
+
+    </div>
+
+  </section>
+
+
+
+  <script>
+
+    /* =====================================================
+       CHAVES VÁLIDAS
+    ====================================================== */
+
+    const VALID_KEYS = {
+
+      "11TZIPOR11": "TZIPOR",
+
+      "11SHOMER11": "SHOMER",
+
+      "11VISION11": "VISION"
+
+    };
+
+
+    /* =====================================================
+       ELEMENTOS
+    ====================================================== */
+
+    const portalScreen =
+      document.getElementById("portalScreen");
+
+    const portalBox =
+      document.getElementById("portalBox");
+
+    const portalKey =
+      document.getElementById("portalKey");
+
+    const unlockButton =
+      document.getElementById("unlockButton");
+
+    const message =
+      document.getElementById("message");
+
+    const recognitionScreen =
+      document.getElementById("recognitionScreen");
+
+    const videoScreen =
+      document.getElementById("videoScreen");
+
+    const portalVideo =
+      document.getElementById("portalVideo");
+
+    const finalScreen =
+      document.getElementById("finalScreen");
+
+    const crossButton =
+      document.getElementById("crossButton");
+
+
+    /* =====================================================
+       NORMALIZAÇÃO DA CHAVE
+    ====================================================== */
+
+    function normalizeKey(value) {
+
+      return value
+        .trim()
+        .toUpperCase()
+        .replace(/\s+/g, "");
+
+    }
+
+
+    /* =====================================================
+       CHAVE INCORRETA
+    ====================================================== */
+
+    function invalidKey() {
+
+      message.innerHTML =
+        "A CHAVE NÃO FOI RECONHECIDA.<br>O Portal permanece selado.";
+
+
+      portalBox.classList.remove("error");
+
+
+      void portalBox.offsetWidth;
+
+
+      portalBox.classList.add("error");
+
+
+      portalKey.focus();
+
+    }
+
+
+    /* =====================================================
+       DESBLOQUEAR PORTAL
+    ====================================================== */
+
+    async function unlockPortal() {
+
+
+      const typedKey =
+        normalizeKey(portalKey.value);
+
+
+      const keyType =
+        VALID_KEYS[typedKey];
+
+
+      if (!keyType) {
+
+        invalidKey();
+
+        return;
+
+      }
+
+
+      /*
+        Guarda qual tipo de chave foi usado.
+      */
+
+      localStorage.setItem(
+        "passaro_portal_key",
+        keyType
+      );
+
+
+      message.textContent = "";
+
+
+      unlockButton.disabled = true;
+
+      portalKey.disabled = true;
+
+
+      /*
+        Prepara vídeo com áudio.
+      */
+
+      portalVideo.currentTime = 0;
+
+      portalVideo.muted = false;
+
+      portalVideo.volume = 1;
+
+
+      /*
+        CHAVE RECONHECIDA
+      */
+
+      recognitionScreen.style.display = "flex";
+
+
+      requestAnimationFrame(() => {
+
+        recognitionScreen.classList.add("show");
+
+      });
+
+
+      /*
+        Inicia o vídeo após 1,2 segundo.
+      */
+
+      setTimeout(async () => {
+
+
+        portalScreen.style.display = "none";
+
+
+        recognitionScreen.classList.remove("show");
+
+
+        videoScreen.style.display = "flex";
+
+
+        try {
+
+          await portalVideo.play();
+
+        }
+
+        catch (error) {
+
+
+          console.log(
+            "Reprodução automática bloqueada:",
+            error
+          );
+
+
+          /*
+            Fallback para navegadores que
+            eventualmente bloquearem o vídeo.
+          */
+
+          videoScreen.style.cursor = "pointer";
+
+
+          const startVideoOnTouch = async () => {
+
+            try {
+
+              await portalVideo.play();
+
+            }
+
+            catch (e) {
+
+              console.log(e);
+
+            }
+
+
+            videoScreen.removeEventListener(
+              "click",
+              startVideoOnTouch
+            );
+
+          };
+
+
+          videoScreen.addEventListener(
+            "click",
+            startVideoOnTouch
+          );
+
+        }
+
+
+      }, 1200);
+
+    }
+
+
+    /* =====================================================
+       QUANDO O VÍDEO TERMINAR
+    ====================================================== */
+
+    portalVideo.addEventListener(
+      "ended",
+      () => {
+
+
+        videoScreen.style.display = "none";
+
+
+        finalScreen.style.display = "flex";
+
+
+        requestAnimationFrame(() => {
+
+
+          requestAnimationFrame(() => {
+
+            finalScreen.classList.add("show");
+
+          });
+
+
+        });
+
+
+      }
+    );
+
+
+    /* =====================================================
+       BOTÃO ATRAVESSAR
+    ====================================================== */
+
+    crossButton.addEventListener(
+      "click",
+      () => {
+
+
+        /*
+          Registra que a travessia
+          foi concluída.
+        */
+
+        localStorage.setItem(
+          "passaro_portal_crossed",
+          "true"
+        );
+
+
+        localStorage.setItem(
+          "passaro_portal_crossed_at",
+          new Date().toISOString()
+        );
+
+
+        /*
+          Entra no APP PASSARO principal.
+        */
+
+        window.location.href = "../";
+
+
+      }
+    );
+
+
+    /* =====================================================
+       BOTÃO DESBLOQUEAR
+    ====================================================== */
+
+    unlockButton.addEventListener(
+      "click",
+      unlockPortal
+    );
+
+
+    /* =====================================================
+       ENTER TAMBÉM DESBLOQUEIA
+    ====================================================== */
+
+    portalKey.addEventListener(
+      "keydown",
+      (event) => {
+
+
+        if (event.key === "Enter") {
+
+          unlockPortal();
+
+        }
+
+
+      }
+    );
+
+
+    /* =====================================================
+       DIGITAÇÃO AUTOMATICAMENTE EM MAIÚSCULAS
+    ====================================================== */
+
+    portalKey.addEventListener(
+      "input",
+      () => {
+
+
+        message.textContent = "";
+
+
+        portalKey.value =
+          portalKey.value.toUpperCase();
+
+
+      }
+    );
+
+
+    /* =====================================================
+       PRÉ-CARREGA O VÍDEO
+    ====================================================== */
+
+    window.addEventListener(
+      "load",
+      () => {
+
+        portalVideo.load();
+
+      }
+    );
+
+  </script>
+
+
+</body>
+</html>
