@@ -17,10 +17,18 @@
   <script type="text/babel">
     const { useState, useEffect, useRef } = React;
 
-    // Componente da Loja de Camisetas (WhatsApp Integration)
+    // Componente da Loja de Camisetas (Com Carrossel de 3 Imagens)
     function CamisetaSection() {
       const [tamanho, setTamanho] = useState("G");
       const [quantidade, setQuantidade] = useState(1);
+      const [currentImgIndex, setCurrentImgIndex] = useState(0);
+
+      const imagensCamiseta = [
+        "images/camisetaguardian.jpg",
+        "images/camisetaguardian2.jpg",
+        "images/camisetaguardian3.jpg"
+      ];
+
       const numeroWhatsApp = "5543988043776";
 
       const handleComprarZap = () => {
@@ -30,19 +38,58 @@
         window.open(url, '_blank');
       };
 
+      const handlePrevImg = () => {
+        setCurrentImgIndex((prev) => (prev === 0 ? imagensCamiseta.length - 1 : prev - 1));
+      };
+
+      const handleNextImg = () => {
+        setCurrentImgIndex((prev) => (prev === imagensCamiseta.length - 1 ? 0 : prev + 1));
+      };
+
       const tamanhos = ['P', 'M', 'G', 'GG', 'XGG'];
 
       return (
         <section className="max-w-5xl mx-auto my-12 px-4">
           <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 md:p-8 shadow-2xl flex flex-col md:flex-row items-center gap-8">
             
-            {/* Imagem do Produto */}
-            <div className="w-full md:w-1/2 text-center">
-              <img 
-                src="images/camisetaguardian.jpg" 
-                alt="Camiseta Oficial PASSARO - The Guardian of Hidden Wisdom" 
-                className="w-full max-w-md mx-auto rounded-xl shadow-lg border border-neutral-800"
-              />
+            {/* Galeria de Fotos da Camiseta (3 em 1 / Slide) */}
+            <div className="w-full md:w-1/2 text-center relative group">
+              <div className="relative overflow-hidden rounded-xl border border-neutral-800 shadow-lg bg-neutral-950 max-w-md mx-auto aspect-square flex items-center justify-center">
+                <img 
+                  src={imagensCamiseta[currentImgIndex]} 
+                  alt={`Camiseta Oficial PASSARO - Foto ${currentImgIndex + 1}`}
+                  className="w-full h-full object-cover transition-all duration-300"
+                />
+
+                {/* Botão Foto Anterior */}
+                <button 
+                  onClick={handlePrevImg}
+                  aria-label="Foto anterior"
+                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-amber-500 hover:text-black text-white p-2 rounded-full border border-neutral-700/60 transition backdrop-blur-sm"
+                >
+                  <i data-lucide="chevron-left" className="w-5 h-5"></i>
+                </button>
+
+                {/* Botão Próxima Foto */}
+                <button 
+                  onClick={handleNextImg}
+                  aria-label="Próxima foto"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-amber-500 hover:text-black text-white p-2 rounded-full border border-neutral-700/60 transition backdrop-blur-sm"
+                >
+                  <i data-lucide="chevron-right" className="w-5 h-5"></i>
+                </button>
+
+                {/* Indicador de Fotos (Dots) */}
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 bg-black/50 px-3 py-1 rounded-full backdrop-blur-sm border border-neutral-800">
+                  {imagensCamiseta.map((_, idx) => (
+                    <button 
+                      key={idx}
+                      onClick={() => setCurrentImgIndex(idx)}
+                      className={`w-2.5 h-2.5 rounded-full transition ${currentImgIndex === idx ? 'bg-amber-500 w-5' : 'bg-neutral-500 hover:bg-neutral-300'}`}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
 
             {/* Detalhes e Controles */}
@@ -770,7 +817,7 @@ Agora eu posso ver a luz novamente`
             onEnded={() => { setCurrentPlayingId(null); setCurrentTime(0); }}
           ></audio>
 
-          {/* Sticky Header - Logo no canto esquerdo original */}
+          {/* Sticky Header */}
           <header className="sticky top-0 z-40 bg-neutral-900/90 backdrop-blur-md border-b border-neutral-800 px-4 py-3 flex justify-between items-center">
             <div className="flex items-center gap-2">
               <i data-lucide="disc" className="w-6 h-6 text-amber-500 animate-spin"></i>
@@ -789,19 +836,18 @@ Agora eu posso ver a luz novamente`
                 <span className="hidden sm:inline">{copiedShare ? 'Link Copiado!' : 'Compartilhar'}</span>
               </button>
 
-              <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-white transition">
-                <i data-lucide="instagram" className="w-5 h-5"></i>
+              <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-white transition flex items-center gap-1">
+                <i data-lucide="instagram" className="w-5 h-5 text-amber-500"></i>
+                <span className="hidden md:inline text-xs font-semibold">@passaroofficial</span>
               </a>
               <a href={socialLinks.youtube} target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-red-500 transition">
-                <i data-lucide="youtube" className="w-5 h-5"></i>
+                <i data-lucide="youtube" className="w-5 h-5 text-red-500"></i>
               </a>
               <a href="#support" className="text-xs bg-amber-600 hover:bg-amber-500 text-black font-extrabold px-3 py-1.5 rounded-full transition ml-1">
                 Apoiar
               </a>
             </div>
           </header>
-
-          {/* A abertura audiovisual agora acontece exclusivamente em /portal/ */}
 
           {/* Decifre os Enigmas Ocultos */}
           <section className="max-w-5xl mx-auto my-12 px-4 space-y-6">
@@ -836,7 +882,7 @@ Agora eu posso ver a luz novamente`
                     )}
 
                     <div>
-                      {/* Imagem de Capa 100% Limpa */}
+                      {/* Imagem de Capa */}
                       <div className="relative aspect-square overflow-hidden bg-neutral-950">
                         <img 
                           src={track.cover} 
@@ -846,7 +892,7 @@ Agora eu posso ver a luz novamente`
                       </div>
 
                       <div className="p-4 space-y-3">
-                        {/* Contador de Downloads Movido para Baixo da Imagem */}
+                        {/* Contador de Downloads */}
                         <div className="flex items-center gap-1.5 text-neutral-400 text-[11px] font-mono border-b border-neutral-800 pb-2">
                           <i data-lucide="download" className="w-3.5 h-3.5 text-amber-500"></i>
                           <span className="font-bold text-neutral-300">{count.toLocaleString('pt-BR')}</span> downloads realizados
@@ -1027,7 +1073,7 @@ Agora eu posso ver a luz novamente`
                         <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-wider block mb-1">Instagram (@usuario)</label>
                         <input 
                           type="text" 
-                          placeholder="@seuinstagram" 
+                          placeholder="@passaroofficial" 
                           value={vipInstagram}
                           onChange={(e) => setVipInstagram(e.target.value)}
                           className="w-full bg-neutral-950 border border-neutral-800 text-white px-4 py-2.5 rounded-xl focus:outline-none focus:border-amber-500 text-sm"
@@ -1195,9 +1241,9 @@ Agora eu posso ver a luz novamente`
 
           {/* Footer */}
           <footer className="max-w-4xl mx-auto mt-16 px-4 pt-8 border-t border-neutral-800 text-center space-y-6">
-            <div className="flex justify-center items-center gap-8">
+            <div className="flex justify-center items-center gap-8 flex-wrap">
               <a href={socialLinks.instagram} target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-white transition flex items-center gap-2 text-xs font-bold">
-                <i data-lucide="instagram" className="w-5 h-5 text-amber-500"></i> Instagram
+                <i data-lucide="instagram" className="w-5 h-5 text-amber-500"></i> @passaroofficial
               </a>
 
               <a href={socialLinks.youtube} target="_blank" rel="noopener noreferrer" className="text-neutral-400 hover:text-red-500 transition flex items-center gap-2 text-xs font-bold">
@@ -1288,7 +1334,7 @@ Agora eu posso ver a luz novamente`
             </div>
           )}
 
-          {/* MODAL ENIGMA #1 — TZIPOR -> GUARDIAN */}
+          {/* MODAL ENIGMA #1 */}
           {activeRiddle === 'riddle1' && (
             <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
               <div className="bg-neutral-900 border border-amber-500/40 w-full max-w-lg rounded-2xl p-6 space-y-5 shadow-2xl">
@@ -1333,7 +1379,7 @@ Agora eu posso ver a luz novamente`
             </div>
           )}
 
-          {/* MODAL ENIGMA #2 — GUARDIAN -> RAINING TEARS */}
+          {/* MODAL ENIGMA #2 */}
           {activeRiddle === 'riddle2' && (
             <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
               <div className="bg-neutral-900 border border-amber-500/40 w-full max-w-lg rounded-2xl p-6 space-y-5 shadow-2xl">
@@ -1374,7 +1420,7 @@ Agora eu posso ver a luz novamente`
             </div>
           )}
 
-          {/* MODAL ENIGMA #3 — RAINING TEARS -> DARK CLOUDS */}
+          {/* MODAL ENIGMA #3 */}
           {activeRiddle === 'riddle3' && (
             <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
               <div className="bg-neutral-900 border border-amber-500/40 w-full max-w-lg rounded-2xl p-6 space-y-5 shadow-2xl">
