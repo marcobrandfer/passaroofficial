@@ -22,6 +22,7 @@
       const [tamanho, setTamanho] = useState("G");
       const [quantidade, setQuantidade] = useState(1);
       const [currentImgIndex, setCurrentImgIndex] = useState(0);
+      const [isGalleryOpen, setIsGalleryOpen] = useState(false);
 
       const imagensCamiseta = [
         "images/camisetaguardian.jpg",
@@ -46,120 +47,302 @@
         setCurrentImgIndex((prev) => (prev === imagensCamiseta.length - 1 ? 0 : prev + 1));
       };
 
+      useEffect(() => {
+        if (!isGalleryOpen) return;
+
+        const handleKeyDown = (e) => {
+          if (e.key === "Escape") setIsGalleryOpen(false);
+          if (e.key === "ArrowLeft") handlePrevImg();
+          if (e.key === "ArrowRight") handleNextImg();
+        };
+
+        document.addEventListener("keydown", handleKeyDown);
+        document.body.style.overflow = "hidden";
+
+        return () => {
+          document.removeEventListener("keydown", handleKeyDown);
+          document.body.style.overflow = "";
+        };
+      }, [isGalleryOpen]);
+
       const tamanhos = ['P', 'M', 'G', 'GG', 'XGG'];
 
       return (
-        <section className="max-w-5xl mx-auto my-12 px-4">
-          <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 md:p-8 shadow-2xl flex flex-col md:flex-row items-center gap-8">
-            
-            {/* Galeria de Fotos da Camiseta (Ajustado object-contain para não cortar) */}
-            <div className="w-full md:w-1/2 text-center relative group">
-              <div className="relative overflow-hidden rounded-xl border border-neutral-800 shadow-lg bg-neutral-950 max-w-md mx-auto aspect-square flex items-center justify-center p-2">
-                <img 
-                  src={imagensCamiseta[currentImgIndex]} 
-                  alt={`Camiseta Oficial PASSARO - Foto ${currentImgIndex + 1}`}
-                  className="w-full h-full object-contain transition-all duration-300"
-                />
+        <>
+          <section className="max-w-6xl mx-auto my-14 px-4">
+            <div className="relative overflow-hidden bg-gradient-to-br from-neutral-900 via-neutral-900 to-neutral-950 border border-neutral-800 rounded-3xl shadow-2xl">
+              <div className="absolute -top-24 -left-24 w-72 h-72 bg-amber-500/5 rounded-full blur-3xl pointer-events-none"></div>
 
-                {/* Botão Foto Anterior */}
-                <button 
-                  onClick={handlePrevImg}
-                  aria-label="Foto anterior"
-                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-amber-500 hover:text-black text-white p-2 rounded-full border border-neutral-700/60 transition backdrop-blur-sm z-10"
-                >
-                  <i data-lucide="chevron-left" className="w-5 h-5"></i>
-                </button>
+              <div className="px-6 pt-6 md:px-8 md:pt-8 flex items-center justify-between gap-4">
+                <div>
+                  <div className="text-[10px] font-black uppercase tracking-[0.28em] text-amber-500">
+                    Merchandise Oficial PASSARO
+                  </div>
+                  <div className="text-xs text-neutral-500 mt-1">
+                    The Guardian of Hidden Wisdom Collection
+                  </div>
+                </div>
+                <div className="hidden sm:flex items-center gap-2 border border-amber-500/20 bg-amber-500/5 px-3 py-1.5 rounded-full">
+                  <i data-lucide="sparkles" className="w-3.5 h-3.5 text-amber-400"></i>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-amber-200">Arte Exclusiva</span>
+                </div>
+              </div>
 
-                {/* Botão Próxima Foto */}
-                <button 
-                  onClick={handleNextImg}
-                  aria-label="Próxima foto"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-amber-500 hover:text-black text-white p-2 rounded-full border border-neutral-700/60 transition backdrop-blur-sm z-10"
-                >
-                  <i data-lucide="chevron-right" className="w-5 h-5"></i>
-                </button>
+              <div className="p-6 md:p-8 pt-5 md:pt-6 grid grid-cols-1 lg:grid-cols-[1.55fr_0.85fr] gap-7 lg:gap-9 items-start">
 
-                {/* Indicador de Fotos (Dots) */}
-                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 bg-black/50 px-3 py-1 rounded-full backdrop-blur-sm border border-neutral-800 z-10">
-                  {imagensCamiseta.map((_, idx) => (
-                    <button 
-                      key={idx}
-                      onClick={() => setCurrentImgIndex(idx)}
-                      className={`w-2.5 h-2.5 rounded-full transition ${currentImgIndex === idx ? 'bg-amber-500 w-5' : 'bg-neutral-500 hover:bg-neutral-300'}`}
-                    />
-                  ))}
+                {/* GALERIA PRINCIPAL — 4:5 para valorizar as artes verticais */}
+                <div className="space-y-3">
+                  <div className="relative group rounded-2xl overflow-hidden border border-neutral-700/70 bg-black shadow-2xl">
+                    <button
+                      type="button"
+                      onClick={() => setIsGalleryOpen(true)}
+                      className="relative block w-full aspect-[4/5] cursor-zoom-in overflow-hidden bg-black"
+                      aria-label="Ampliar imagem da camiseta"
+                    >
+                      <img
+                        src={imagensCamiseta[currentImgIndex]}
+                        alt={`Camiseta Oficial PASSARO - Foto ${currentImgIndex + 1}`}
+                        className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-[1.025]"
+                      />
+
+                      <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/75 via-black/20 to-transparent pointer-events-none"></div>
+
+                      <div className="absolute left-4 bottom-4 flex items-center gap-2 bg-black/65 border border-white/10 backdrop-blur-md text-white px-3 py-2 rounded-full shadow-lg">
+                        <i data-lucide="zoom-in" className="w-4 h-4 text-amber-400"></i>
+                        <span className="text-[10px] font-bold uppercase tracking-wider">Toque para ampliar</span>
+                      </div>
+
+                      <div className="absolute right-4 bottom-4 bg-black/65 border border-white/10 backdrop-blur-md text-neutral-300 px-3 py-2 rounded-full text-[10px] font-mono">
+                        {currentImgIndex + 1} / {imagensCamiseta.length}
+                      </div>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handlePrevImg}
+                      aria-label="Foto anterior"
+                      className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-amber-500 hover:text-black text-white p-3 rounded-full border border-white/10 transition backdrop-blur-md z-10 shadow-xl"
+                    >
+                      <i data-lucide="chevron-left" className="w-5 h-5"></i>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleNextImg}
+                      aria-label="Próxima foto"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-amber-500 hover:text-black text-white p-3 rounded-full border border-white/10 transition backdrop-blur-md z-10 shadow-xl"
+                    >
+                      <i data-lucide="chevron-right" className="w-5 h-5"></i>
+                    </button>
+                  </div>
+
+                  {/* Miniaturas reais em vez de apenas bolinhas */}
+                  <div className="grid grid-cols-3 gap-2.5">
+                    {imagensCamiseta.map((img, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => setCurrentImgIndex(idx)}
+                        aria-label={`Ver foto ${idx + 1}`}
+                        className={`relative aspect-[4/3] rounded-xl overflow-hidden border-2 bg-black transition-all ${
+                          currentImgIndex === idx
+                            ? 'border-amber-500 ring-2 ring-amber-500/20'
+                            : 'border-neutral-800 opacity-60 hover:opacity-100 hover:border-neutral-600'
+                        }`}
+                      >
+                        <img
+                          src={img}
+                          alt={`Miniatura ${idx + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                        {currentImgIndex === idx && (
+                          <div className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-amber-500 text-black flex items-center justify-center">
+                            <i data-lucide="check" className="w-3 h-3"></i>
+                          </div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* PAINEL DE COMPRA */}
+                <div className="lg:sticky lg:top-24 space-y-5 bg-neutral-950/55 border border-neutral-800 rounded-2xl p-5 md:p-6 shadow-xl">
+                  <div className="space-y-2">
+                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-amber-500">
+                      <i data-lucide="shirt" className="w-3.5 h-3.5"></i>
+                      Edição Oficial
+                    </span>
+                    <h2 className="text-2xl md:text-3xl font-black text-white leading-tight tracking-tight">
+                      CAMISETA <span className="text-amber-400">THE GUARDIAN OF HIDDEN WISDOM</span>
+                    </h2>
+                  </div>
+
+                  <p className="text-xs md:text-sm text-neutral-400 leading-relaxed">
+                    Camiseta oficial da banda PASSARO em malha 100% algodão de alta qualidade, estampa exclusiva com acabamento premium. Leve a energia e a imponência do metal com você.
+                  </p>
+
+                  <div className="border-y border-neutral-800 py-4">
+                    <div className="text-[10px] uppercase tracking-wider text-neutral-500 font-bold mb-1">Valor</div>
+                    <div className="text-3xl font-black text-white">
+                      R$ 89,90
+                    </div>
+                    <span className="text-[11px] text-neutral-500">(via PIX ou Cartão)</span>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase tracking-wider text-amber-500 mb-2.5">
+                      Escolha o Tamanho
+                    </label>
+                    <div className="grid grid-cols-5 gap-2">
+                      {tamanhos.map((tam) => (
+                        <button
+                          key={tam}
+                          type="button"
+                          onClick={() => setTamanho(tam)}
+                          className={`py-2.5 rounded-xl font-black text-xs transition border ${
+                            tamanho === tam
+                              ? 'bg-amber-500 text-black border-amber-400 shadow-lg shadow-amber-950'
+                              : 'bg-neutral-900 text-white border-neutral-800 hover:border-neutral-600'
+                          }`}
+                        >
+                          {tam}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="qtdCamiseta" className="block text-[10px] font-bold uppercase tracking-wider text-amber-500 mb-2.5">
+                      Quantidade
+                    </label>
+                    <div className="inline-flex items-center bg-neutral-900 border border-neutral-800 rounded-xl overflow-hidden">
+                      <button
+                        type="button"
+                        onClick={() => setQuantidade((q) => Math.max(1, q - 1))}
+                        className="w-10 h-10 text-neutral-300 hover:bg-neutral-800 hover:text-white transition text-lg font-bold"
+                        aria-label="Diminuir quantidade"
+                      >
+                        −
+                      </button>
+                      <input
+                        type="number"
+                        id="qtdCamiseta"
+                        value={quantidade}
+                        min="1"
+                        max="10"
+                        onChange={(e) => setQuantidade(Math.max(1, Math.min(10, parseInt(e.target.value) || 1)))}
+                        className="w-12 h-10 bg-neutral-950 border-x border-neutral-800 text-white font-black text-center text-sm focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setQuantidade((q) => Math.min(10, q + 1))}
+                        className="w-10 h-10 text-neutral-300 hover:bg-neutral-800 hover:text-white transition text-lg font-bold"
+                        aria-label="Aumentar quantidade"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={handleComprarZap}
+                    className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-4 px-6 rounded-xl text-sm uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-xl shadow-emerald-950/40"
+                  >
+                    <i data-lucide="message-circle" className="w-5 h-5"></i>
+                    <span>Quero minha camiseta</span>
+                  </button>
+
+                  <div className="grid grid-cols-2 gap-2 text-center">
+                    <div className="bg-neutral-900 border border-neutral-800 rounded-xl px-3 py-2.5">
+                      <i data-lucide="shield-check" className="w-4 h-4 text-amber-500 mx-auto mb-1"></i>
+                      <div className="text-[9px] uppercase font-bold tracking-wider text-neutral-400">Compra Direta</div>
+                    </div>
+                    <div className="bg-neutral-900 border border-neutral-800 rounded-xl px-3 py-2.5">
+                      <i data-lucide="credit-card" className="w-4 h-4 text-amber-500 mx-auto mb-1"></i>
+                      <div className="text-[9px] uppercase font-bold tracking-wider text-neutral-400">PIX ou Cartão</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
+          </section>
 
-            {/* Detalhes e Controles */}
-            <div className="w-full md:w-1/2 space-y-5">
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-500">Merchandise Oficial PASSARO</span>
-                <h2 className="text-2xl md:text-3xl font-black text-amber-400 tracking-wide mt-1">
-                  CAMISETA THE GUARDIAN OF HIDDEN WISDOM
-                </h2>
-              </div>
+          {/* LIGHTBOX / GALERIA EM TELA CHEIA */}
+          {isGalleryOpen && (
+            <div
+              className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-center justify-center p-3 md:p-8"
+              onClick={() => setIsGalleryOpen(false)}
+            >
+              <button
+                type="button"
+                onClick={() => setIsGalleryOpen(false)}
+                aria-label="Fechar galeria"
+                className="absolute top-4 right-4 md:top-6 md:right-6 z-20 bg-neutral-900/80 hover:bg-amber-500 hover:text-black text-white border border-neutral-700 p-3 rounded-full transition"
+              >
+                <i data-lucide="x" className="w-5 h-5"></i>
+              </button>
 
-              <p className="text-xs md:text-sm text-neutral-400 leading-relaxed">
-                Camiseta oficial da banda PASSARO em malha 100% algodão de alta qualidade, estampa exclusiva com acabamento premium. Leve a energia e a imponência do metal com você.
-              </p>
+              <div
+                className="relative w-full h-full max-w-6xl mx-auto flex flex-col items-center justify-center"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="text-center mb-3">
+                  <div className="text-[10px] text-amber-500 uppercase tracking-[0.25em] font-black">
+                    PASSARO Official Merchandise
+                  </div>
+                  <div className="text-xs text-neutral-500 mt-1">
+                    Foto {currentImgIndex + 1} de {imagensCamiseta.length}
+                  </div>
+                </div>
 
-              <div className="text-2xl font-bold text-white">
-                R$ 89,90 <span className="text-xs text-neutral-500 font-normal">(via PIX ou Cartão)</span>
-              </div>
+                <div className="relative flex-1 min-h-0 w-full flex items-center justify-center">
+                  <img
+                    src={imagensCamiseta[currentImgIndex]}
+                    alt={`Camiseta Oficial PASSARO ampliada - Foto ${currentImgIndex + 1}`}
+                    className="max-w-full max-h-full object-contain rounded-xl shadow-2xl"
+                  />
 
-              {/* Tamanhos */}
-              <div>
-                <label className="block text-xs font-bold uppercase text-amber-500 mb-2">Escolha o Tamanho:</label>
-                <div className="flex gap-2 flex-wrap">
-                  {tamanhos.map((tam) => (
+                  <button
+                    type="button"
+                    onClick={handlePrevImg}
+                    aria-label="Foto anterior"
+                    className="absolute left-1 md:left-5 top-1/2 -translate-y-1/2 bg-black/75 hover:bg-amber-500 hover:text-black text-white border border-white/10 p-3 md:p-4 rounded-full transition shadow-xl"
+                  >
+                    <i data-lucide="chevron-left" className="w-6 h-6"></i>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleNextImg}
+                    aria-label="Próxima foto"
+                    className="absolute right-1 md:right-5 top-1/2 -translate-y-1/2 bg-black/75 hover:bg-amber-500 hover:text-black text-white border border-white/10 p-3 md:p-4 rounded-full transition shadow-xl"
+                  >
+                    <i data-lucide="chevron-right" className="w-6 h-6"></i>
+                  </button>
+                </div>
+
+                <div className="flex gap-2 mt-3">
+                  {imagensCamiseta.map((img, idx) => (
                     <button
-                      key={tam}
+                      key={idx}
                       type="button"
-                      onClick={() => setTamanho(tam)}
-                      className={`px-4 py-2 rounded-lg font-bold text-xs transition border ${
-                        tamanho === tam 
-                          ? 'bg-amber-500 text-black border-amber-500 font-extrabold' 
-                          : 'bg-neutral-950 text-white border-neutral-800 hover:border-neutral-600'
+                      onClick={() => setCurrentImgIndex(idx)}
+                      className={`w-14 h-14 md:w-16 md:h-16 rounded-lg overflow-hidden border-2 bg-black transition ${
+                        currentImgIndex === idx ? 'border-amber-500' : 'border-neutral-800 opacity-50 hover:opacity-100'
                       }`}
                     >
-                      {tam}
+                      <img src={img} alt={`Miniatura ampliada ${idx + 1}`} className="w-full h-full object-cover" />
                     </button>
                   ))}
                 </div>
+
+                <div className="hidden md:block text-[10px] text-neutral-600 mt-3 font-mono">
+                  ← → para navegar &nbsp; • &nbsp; ESC para fechar
+                </div>
               </div>
-
-              {/* Quantidade */}
-              <div>
-                <label htmlFor="qtdCamiseta" className="block text-xs font-bold uppercase text-amber-500 mb-2">Quantidade:</label>
-                <input 
-                  type="number" 
-                  id="qtdCamiseta" 
-                  value={quantidade} 
-                  min="1" 
-                  max="10"
-                  onChange={(e) => setQuantidade(Math.max(1, parseInt(e.target.value) || 1))}
-                  className="w-20 bg-neutral-950 border border-neutral-800 text-white font-bold text-center py-2 rounded-lg text-sm focus:outline-none focus:border-amber-500"
-                />
-              </div>
-
-              {/* Botão WhatsApp */}
-              <button 
-                onClick={handleComprarZap}
-                className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 px-6 rounded-xl text-sm uppercase tracking-wider transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-950"
-              >
-                <i data-lucide="message-circle" className="w-5 h-5"></i>
-                <span>Pedir pelo WhatsApp</span>
-              </button>
-
-              <p className="text-[11px] text-neutral-500 text-center">
-                🔒 Atendimento direto e seguro • Pagamento via PIX ou Cartão
-              </p>
             </div>
-
-          </div>
-        </section>
+          )}
+        </>
       );
     }
 
@@ -181,8 +364,13 @@
       const [userName, setUserName] = useState('');
       const [activeFansCount, setActiveFansCount] = useState(342);
 
+      // JORNADA PASSARO — CICLO DE LANÇAMENTOS
+      // Tzipor = rito de entrada. Guardian = primeiro lançamento.
+      // As faixas seguintes permanecem seladas até o próximo chamado oficial.
+      const JOURNEY_STORAGE_KEY = 'passaro_journey_v2';
+
       const [unlockedTracks, setUnlockedTracks] = useState(() => {
-        const saved = JSON.parse(localStorage.getItem('passaro_unlocked_tracks') || '{}');
+        const saved = JSON.parse(localStorage.getItem(JOURNEY_STORAGE_KEY) || '{}');
         return {
           tzipor: true,
           guardian: saved.guardian === true,
@@ -190,6 +378,14 @@
           dark_clouds: saved.dark_clouds === true
         };
       });
+
+      // Controle editorial das próximas passagens.
+      // No ciclo atual somente o Enigma #1 (Guardian) está disponível.
+      const releaseAccess = {
+        guardianRiddle: true,
+        rainingMission: false,
+        darkCloudsMission: false
+      };
 
       const [activeRiddle, setActiveRiddle] = useState(null);
       const [selectedOptionRiddle1, setSelectedOptionRiddle1] = useState('');
@@ -241,8 +437,8 @@
           title: 'The Guardian of Hidden Wisdom',
           subtitle: 'Single Oficial #1',
           cover: './images/capaguardian.jpg',
-          audioPreview: './audios/Marco Brandfer - The Guardian of Hidden Wisdom.mp3',
-          downloadFile: './audios/Marco Brandfer - The Guardian of Hidden Wisdom.mp3',
+          audioPreview: './audios/Passaro - The Guardian of Hidden Wisdom.mp3',
+          downloadFile: './audios/Passaro - The Guardian of Hidden Wisdom.mp3',
           lyrics: {
             en: `The Guardian of Hidden Wisdom
 
@@ -328,8 +524,8 @@ Pois a sabedoria pode conceder a vida ou levar à sepultura`
           title: 'Raining Tears',
           subtitle: 'Single Oficial #2',
           cover: './images/caparaining.jpg',
-          audioPreview: './audios/Marco Brandfer - Raining Tears.mp3',
-          downloadFile: './audios/Marco Brandfer - Raining Tears.mp3',
+          audioPreview: './audios/Passaro - Raining Tears.mp3',
+          downloadFile: './audios/Passaro - Raining Tears.mp3',
           lyrics: {
             en: `Raining Tears
 
@@ -467,8 +663,8 @@ Nós nos ergueremos eternamente`
           title: 'Dark Clouds',
           subtitle: 'Single Oficial #3',
           cover: './images/capadarkclouds.jpg',
-          audioPreview: './audios/Marco Brandfer - Dark Clouds.mp3',
-          downloadFile: './audios/Marco Brandfer - Dark Clouds.mp3',
+          audioPreview: './audios/Passaro - Dark Clouds.mp3',
+          downloadFile: './audios/Passaro - Dark Clouds.mp3',
           lyrics: {
             en: `Dark Clouds
 
@@ -558,7 +754,7 @@ Agora eu posso ver a luz novamente`
       });
 
       useEffect(() => {
-        localStorage.setItem('passaro_unlocked_tracks', JSON.stringify({
+        localStorage.setItem(JOURNEY_STORAGE_KEY, JSON.stringify({
           guardian: unlockedTracks.guardian,
           raining_tears: unlockedTracks.raining_tears,
           dark_clouds: unlockedTracks.dark_clouds
@@ -779,6 +975,10 @@ Agora eu posso ver a luz novamente`
 
       const handleSolveRiddle2 = (e) => {
         e.preventDefault();
+        if (!releaseAccess.rainingMission) {
+          setRiddleError("O segundo Portal ainda permanece selado. Aguarde o próximo chamado.");
+          return;
+        }
         if (selectedOptionRiddle2 === 'B') {
           setRiddleError('');
           setRiddleSuccessText("Os Pergaminhos Antigos permanecem nas mãos do Guardião. Você provou estar atento. Raining Tears foi desbloqueada!");
@@ -790,6 +990,10 @@ Agora eu posso ver a luz novamente`
 
       const handleSolveRiddle3 = (e) => {
         e.preventDefault();
+        if (!releaseAccess.darkCloudsMission) {
+          setRiddleError("Esta passagem ainda não foi revelada. Aguarde o próximo chamado.");
+          return;
+        }
         if (selectedOptionRiddle3 === 'C') {
           setRiddleError('');
           setRiddleSuccessText("Sua visão alcançou além do que foi mostrado. A última passagem foi aberta. Dark Clouds foi desbloqueada!");
@@ -863,7 +1067,7 @@ Agora eu posso ver a luz novamente`
               <div className="text-[10px] uppercase tracking-[0.3em] font-bold text-amber-500 mb-2">Você atravessou a linha</div>
               <h1 className="text-3xl font-black uppercase tracking-tight text-white">Decifre os Enigmas de PASSARO</h1>
               <p className="text-xs text-neutral-400 max-w-xl mx-auto leading-relaxed">
-                <strong className="text-amber-500">Tzipor - Ha-Shomer</strong> é a primeira passagem. Ouça cada faixa, acompanhe as letras e decifre os ENIGMAS para quebrar os selos das próximas músicas.
+                <strong className="text-amber-500">Tzipor - Ha-Shomer</strong> é o rito de entrada. Decifre o primeiro Enigma e encontre o Guardião. As passagens seguintes serão reveladas somente quando chegar o próximo chamado.
               </p>
             </div>
 
@@ -912,7 +1116,7 @@ Agora eu posso ver a luz novamente`
                             <h3 className="font-bold text-base text-white line-clamp-1">{track.title}</h3>
                           </div>
                           
-                          {track.lyrics && (
+                          {isUnlocked && track.lyrics && (
                             <button 
                               onClick={() => { setSelectedLyricsTrack(track); setLyricsLang('en'); }}
                               title="Ver Letra e Tradução"
@@ -964,23 +1168,37 @@ Agora eu posso ver a luz novamente`
                           </div>
                         ) : (
                           <div className="bg-neutral-950 border border-amber-900/30 p-4 rounded-xl text-center space-y-3">
-                            <p className="text-xs text-amber-200/80 font-medium leading-relaxed">
-                              {idx === 1
-                                ? "Decifre o primeiro Enigma para revelar The Guardian of Hidden Wisdom!"
-                                : idx === 2
-                                  ? "Compreenda o segredo do Guardião para revelar o portal de Raining Tears!"
-                                  : "Atravesse Raining Tears e decifre o último Enigma para liberar Dark Clouds!"}
-                            </p>
-                            <button 
-                              onClick={() => setActiveRiddle(idx === 1 ? 'riddle1' : idx === 2 ? 'riddle2' : 'riddle3')}
-                              className="w-full bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-black font-extrabold text-xs py-2.5 rounded-xl transition shadow-lg shadow-amber-950/50 flex items-center justify-center gap-2 uppercase tracking-wider"
-                            >
-                              <i data-lucide="key" className="w-4 h-4"></i>
-                              <span>Decifrar Enigma</span>
-                            </button>
+                            {track.id === 'guardian' && releaseAccess.guardianRiddle ? (
+                              <>
+                                <p className="text-xs text-amber-200/80 font-medium leading-relaxed">
+                                  A primeira passagem está diante de você. Decifre o Enigma para revelar The Guardian of Hidden Wisdom.
+                                </p>
+                                <button
+                                  onClick={() => setActiveRiddle('riddle1')}
+                                  className="w-full bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-black font-extrabold text-xs py-2.5 rounded-xl transition shadow-lg shadow-amber-950/50 flex items-center justify-center gap-2 uppercase tracking-wider"
+                                >
+                                  <i data-lucide="key" className="w-4 h-4"></i>
+                                  <span>Decifrar Enigma</span>
+                                </button>
+                              </>
+                            ) : (
+                              <>
+                                <div className="flex items-center justify-center gap-2 text-amber-400">
+                                  <i data-lucide="lock-keyhole" className="w-4 h-4"></i>
+                                  <span className="text-[10px] font-black uppercase tracking-[0.18em]">Portal Selado</span>
+                                </div>
+                                <p className="text-xs text-neutral-400 font-medium leading-relaxed">
+                                  {track.id === 'raining_tears'
+                                    ? "O segundo Portal permanece selado. Aguarde o próximo chamado."
+                                    : "Esta passagem ainda não foi revelada. Aguarde o próximo chamado."}
+                                </p>
+                                <div className="w-full border border-neutral-800 bg-neutral-900/60 text-neutral-600 font-bold text-[10px] py-2.5 rounded-xl uppercase tracking-wider cursor-not-allowed">
+                                  Passagem ainda não concedida
+                                </div>
+                              </>
+                            )}
                           </div>
-                        )}
-                      </div>
+                        )}                      </div>
                     </div>
 
                     <div className="p-4 pt-0 space-y-2">
@@ -1015,6 +1233,16 @@ Agora eu posso ver a luz novamente`
                   </div>
                 );
               })}
+            </div>
+
+            <div className="max-w-2xl mx-auto text-center bg-neutral-900/60 border border-neutral-800 rounded-2xl px-5 py-4">
+              <div className="flex items-center justify-center gap-2 text-amber-500 mb-1.5">
+                <i data-lucide="hourglass" className="w-4 h-4"></i>
+                <span className="text-[10px] font-black uppercase tracking-[0.2em]">A Jornada Continua</span>
+              </div>
+              <p className="text-xs text-neutral-400 leading-relaxed">
+                Nem todos os Portais se abrem ao mesmo tempo. Permaneça atento aos sinais e aos próximos chamados de PASSARO.
+              </p>
             </div>
           </section>
 
