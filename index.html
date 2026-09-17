@@ -393,18 +393,66 @@
       const [selectedOptionRiddle3, setSelectedOptionRiddle3] = useState('');
       const [riddleError, setRiddleError] = useState('');
       const [riddleSuccessText, setRiddleSuccessText] = useState('');
+      const [showGuardianCeremony, setShowGuardianCeremony] = useState(false);
+      const [guardianCeremonyStage, setGuardianCeremonyStage] = useState(0);
+      const guardianCardRef = useRef(null);
+      const guardianUnlockAudioRef = useRef(null);
 
       const [downloadCounts, setDownloadCounts] = useState({
         tzipor: 0,
-        guardian: 1240,
-        raining_tears: 980,
-        dark_clouds: 850
+        guardian: 0,
+        raining_tears: 0,
+        dark_clouds: 0
       });
 
       const [copiedPix, setCopiedPix] = useState(false);
       const [copiedShare, setCopiedShare] = useState(false);
       const [isSubmittingVip, setIsSubmittingVip] = useState(false);
       const [isSubmittingComment, setIsSubmittingComment] = useState(false);
+
+      useEffect(() => {
+        if (!showGuardianCeremony) return;
+
+        setGuardianCeremonyStage(0);
+
+        if (guardianUnlockAudioRef.current) {
+          guardianUnlockAudioRef.current.currentTime = 0;
+          const playPromise = guardianUnlockAudioRef.current.play();
+          if (playPromise && typeof playPromise.catch === 'function') {
+            playPromise.catch(() => {});
+          }
+        }
+        const timers = [
+          setTimeout(() => setGuardianCeremonyStage(1), 450),
+          setTimeout(() => setGuardianCeremonyStage(2), 1500),
+          setTimeout(() => setGuardianCeremonyStage(3), 2800),
+          setTimeout(() => setGuardianCeremonyStage(4), 4000)
+        ];
+
+        document.body.style.overflow = 'hidden';
+        return () => {
+          timers.forEach(clearTimeout);
+          if (guardianUnlockAudioRef.current) {
+            guardianUnlockAudioRef.current.pause();
+            guardianUnlockAudioRef.current.currentTime = 0;
+          }
+          document.body.style.overflow = '';
+        };
+      }, [showGuardianCeremony]);
+
+      const enterGuardianCycle = () => {
+        setShowGuardianCeremony(false);
+        setGuardianCeremonyStage(0);
+        setActiveRiddle(null);
+        setRiddleError('');
+        setRiddleSuccessText('');
+        setSelectedOptionRiddle1('');
+        setTimeout(() => {
+          if (guardianCardRef.current) {
+            guardianCardRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }, 180);
+      };
 
       const [selectedLyricsTrack, setSelectedLyricsTrack] = useState(null);
       const [lyricsLang, setLyricsLang] = useState('en');
@@ -442,7 +490,7 @@
           lyrics: {
             en: `The Guardian of Hidden Wisdom
 
-Who´s the watchmen ?”
+Who’s the watchman?”
 
 Through ancient halls, forgotten and cold
 Lies a secret no one has ever told
@@ -459,7 +507,7 @@ In silence he waits, The truth of the ages
 beyond the kingdom…
 The Guardian of Hidden Wisdom
 
-“He is the watchmen !”
+“He is the watchman!”
 
 The scrolls of old, in his hands they remain
 Holding the answers to break every chain
@@ -966,8 +1014,10 @@ Agora eu posso ver a luz novamente`
         e.preventDefault();
         if (selectedOptionRiddle1 === 'B') {
           setRiddleError('');
-          setRiddleSuccessText("Você compreendeu o primeiro sinal. O Portal não guarda a verdade sozinho — existe alguém que vigia a passagem. The Guardian of Hidden Wisdom foi desbloqueada!");
+          setRiddleSuccessText('');
           setUnlockedTracks(prev => ({ ...prev, guardian: true }));
+          setActiveRiddle(null);
+          setShowGuardianCeremony(true);
         } else {
           setRiddleError("Resposta incorreta. Pense em quem permanece entre o buscador e a sabedoria, decidindo quem pode cruzar a linha.");
         }
@@ -1019,6 +1069,12 @@ Agora eu posso ver a luz novamente`
             ref={audioRef} 
             onTimeUpdate={handleTimeUpdate} 
             onEnded={() => { setCurrentPlayingId(null); setCurrentTime(0); }}
+          ></audio>
+
+          <audio
+            ref={guardianUnlockAudioRef}
+            src="./audios/passaro-unlock.mp3"
+            preload="auto"
           ></audio>
 
           {/* Sticky Header */}
@@ -1079,7 +1135,8 @@ Agora eu posso ver a luz novamente`
 
                 return (
                   <div 
-                    key={track.id} 
+                    key={track.id}
+                    ref={track.id === 'guardian' ? guardianCardRef : null}
                     className={`bg-neutral-900 border rounded-2xl overflow-hidden flex flex-col justify-between shadow-xl transition relative ${
                       isUnlocked 
                         ? 'border-neutral-800 hover:border-amber-500/50' 
@@ -1103,12 +1160,21 @@ Agora eu posso ver a luz novamente`
                         />
                       </div>
 
-                      <div className="p-4 space-y-3">
-                        {/* Contador de Downloads */}
-                        <div className="flex items-center gap-1.5 text-neutral-400 text-[11px] font-mono border-b border-neutral-800 pb-2">
-                          <i data-lucide="download" className="w-3.5 h-3.5 text-amber-500"></i>
-                          <span className="font-bold text-neutral-300">{count.toLocaleString('pt-BR')}</span> downloads realizados
+                      {track.id === 'guardian' && isUnlocked && (
+                        <div className="mx-4 mt-3 flex items-center justify-center gap-2 border border-amber-500/30 bg-amber-500/10 text-amber-300 rounded-xl px-3 py-2">
+                          <i data-lucide="unlock-keyhole" className="w-3.5 h-3.5"></i>
+                          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.16em]">Ciclo I • Desbloqueado</span>
                         </div>
+                      )}
+
+                      <div className="p-4 space-y-3">
+                        {/* Contador real de Downloads — exibido somente após o desbloqueio */}
+                        {isUnlocked && (
+                          <div className="flex items-center gap-1.5 text-neutral-400 text-[11px] font-mono border-b border-neutral-800 pb-2">
+                            <i data-lucide="download" className="w-3.5 h-3.5 text-amber-500"></i>
+                            <span className="font-bold text-neutral-300">{count.toLocaleString('pt-BR')}</span> downloads realizados
+                          </div>
+                        )}
 
                         <div className="flex justify-between items-start gap-2">
                           <div>
@@ -1579,6 +1645,100 @@ Agora eu posso ver a luz novamente`
           )}
 
           {/* MODAL ENIGMA #1 */}
+          {/* CERIMÔNIA — PRIMEIRO SELO ROMPIDO */}
+          {showGuardianCeremony && (
+            <div
+              className="fixed inset-0 z-[200] bg-black flex items-center justify-center overflow-hidden"
+              onClick={() => {
+                if (guardianCeremonyStage < 4) setGuardianCeremonyStage(4);
+              }}
+            >
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.13),transparent_42%)]"></div>
+
+              <div
+                className={`absolute left-1/2 top-0 -translate-x-1/2 h-full bg-gradient-to-b from-transparent via-amber-300 to-transparent transition-all duration-1000 ${
+                  guardianCeremonyStage >= 1 ? 'w-[2px] opacity-90 shadow-[0_0_35px_rgba(251,191,36,0.9)]' : 'w-0 opacity-0'
+                }`}
+              ></div>
+
+              <div className="absolute inset-0 pointer-events-none">
+                {[...Array(18)].map((_, i) => (
+                  <span
+                    key={i}
+                    className={`absolute w-1 h-1 rounded-full bg-amber-300 transition-all duration-[1800ms] ${
+                      guardianCeremonyStage >= 2 ? 'opacity-70 scale-100' : 'opacity-0 scale-0'
+                    }`}
+                    style={{
+                      left: `${8 + ((i * 17) % 84)}%`,
+                      top: `${12 + ((i * 29) % 76)}%`,
+                      boxShadow: '0 0 12px rgba(251,191,36,.75)'
+                    }}
+                  ></span>
+                ))}
+              </div>
+
+              <div className="relative z-10 w-full max-w-3xl px-6 text-center" onClick={(e) => e.stopPropagation()}>
+                <div className={`transition-all duration-1000 ${guardianCeremonyStage >= 1 ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>
+                  <div className={`mx-auto w-24 h-24 md:w-28 md:h-28 rounded-full border flex items-center justify-center transition-all duration-1000 ${
+                    guardianCeremonyStage >= 2
+                      ? 'border-amber-400 bg-amber-500/10 shadow-[0_0_55px_rgba(245,158,11,0.28)]'
+                      : 'border-neutral-800 bg-neutral-950'
+                  }`}>
+                    <i
+                      data-lucide={guardianCeremonyStage >= 2 ? "unlock-keyhole" : "lock-keyhole"}
+                      className={`w-10 h-10 md:w-12 md:h-12 transition-all duration-700 ${
+                        guardianCeremonyStage >= 2 ? 'text-amber-400 scale-110' : 'text-neutral-700'
+                      }`}
+                    ></i>
+                  </div>
+                </div>
+
+                <div className={`mt-7 transition-all duration-1000 ${guardianCeremonyStage >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
+                  <div className="text-[10px] md:text-xs font-black uppercase tracking-[0.35em] text-amber-500">
+                    Primeiro Selo Rompido
+                  </div>
+                  <h2 className="mt-3 text-2xl md:text-4xl font-black uppercase tracking-tight text-white">
+                    O Guardião permitiu sua passagem
+                  </h2>
+                </div>
+
+                <div className={`mt-7 transition-all duration-1000 ${guardianCeremonyStage >= 3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
+                  <div className="h-px w-24 mx-auto bg-gradient-to-r from-transparent via-amber-500 to-transparent mb-6"></div>
+                  <div className="text-neutral-500 text-[10px] uppercase tracking-[0.28em] font-bold mb-2">
+                    PASSARO apresenta
+                  </div>
+                  <div className="text-xl md:text-3xl text-amber-300 font-black tracking-tight">
+                    THE GUARDIAN OF HIDDEN WISDOM
+                  </div>
+                  <div className="mt-2 text-xs font-mono uppercase tracking-[0.22em] text-neutral-400">
+                    Cycle I • Unlocked
+                  </div>
+                </div>
+
+                <div className={`mt-9 transition-all duration-700 ${guardianCeremonyStage >= 4 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'}`}>
+                  <button
+                    type="button"
+                    onClick={enterGuardianCycle}
+                    className="group inline-flex items-center justify-center gap-3 bg-gradient-to-r from-amber-600 via-amber-400 to-amber-600 hover:from-amber-500 hover:via-amber-300 hover:to-amber-500 text-black font-black uppercase tracking-[0.18em] text-xs md:text-sm px-8 py-4 rounded-full shadow-[0_0_35px_rgba(245,158,11,0.25)] transition"
+                  >
+                    <span>Entrar</span>
+                    <i data-lucide="arrow-down" className="w-4 h-4 group-hover:translate-y-1 transition-transform"></i>
+                  </button>
+                </div>
+
+                {guardianCeremonyStage < 4 && (
+                  <button
+                    type="button"
+                    onClick={() => setGuardianCeremonyStage(4)}
+                    className="mt-7 text-[9px] uppercase tracking-[0.22em] text-neutral-700 hover:text-neutral-400 transition"
+                  >
+                    Toque para avançar
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+
           {activeRiddle === 'riddle1' && (
             <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
               <div className="bg-neutral-900 border border-amber-500/40 w-full max-w-lg rounded-2xl p-6 space-y-5 shadow-2xl">
