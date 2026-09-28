@@ -346,7 +346,71 @@
       );
     }
 
+
+
+    // PASSARO INTERNATIONAL EXPERIENCE — UI + HIDDEN WISDOM
+    const PASSARO_LANGS = {
+      en: { label:'EN', name:'English', flag:'🌐' },
+      pt: { label:'PT', name:'Português', flag:'🇧🇷' },
+      ja: { label:'日本語', name:'日本語', flag:'🇯🇵' },
+      fi: { label:'FI', name:'Suomi', flag:'🇫🇮' },
+      es: { label:'ES', name:'Español', flag:'🇪🇸' }
+    };
+
+    const PASSARO_I18N = {
+      en: {
+        crossed:'You crossed the line', riddlesTitle:'Decipher the Riddles of PASSARO',
+        riddlesIntro:'Tzipor - Ha-Shomer is the rite of entry. Decipher the first Riddle and find the Guardian. The next passages will be revealed only when the next calling arrives.',
+        sealed:'Sealed', cycle1:'Cycle I • Unlocked', downloads:'downloads', lyrics:'Lyrics', preview:'Preview',
+        firstPassage:'The first passage is before you. Decipher the Riddle to reveal The Guardian of Hidden Wisdom.', decipher:'Decipher Riddle', portalSealed:'Portal Sealed',
+        secondSealed:'The second Portal remains sealed. Await the next calling.', passageSealed:'This passage has not yet been revealed. Await the next calling.', notGranted:'Passage not yet granted', locked:'🔒 Content Locked',
+        journeyContinues:'The Journey Continues', journeyText:'Not all Portals open at the same time. Remain attentive to the signs and the next callings of PASSARO.',
+        share:'Share', copied:'Link Copied!', support:'Support', enter:'Enter', advance:'Tap to advance',
+        firstSeal:'First Seal Broken', guardianAllowed:'The Guardian has granted your passage', presents:'PASSARO presents',
+        wisdomEyebrow:'HIDDEN WISDOM', wisdomTitle:'THE SCROLLS OF VISION', wisdomIntro:'There is knowledge that cannot simply be given. It must be found — and then lived.',
+        philosophy:'PASSARO invites you to see beyond what was presented as truth, so you may consciously choose who you will become.',
+        seeBeyond:'SEE BEYOND', discovered:'DISCOVERED', sealedScroll:'SEALED', reveal:'REVEAL THE SCROLL',
+        scroll1:'FIRST VISION', scroll1Name:'THE SCROLL OF SIGHT', scroll1Quote:'“The one who believes they can see everything has already begun to go blind again.”',
+        visionLabel:'THE VISION', scroll1Body:'To see beyond does not mean to possess the truth. It means recognizing that what we see may be only part of it. The greater our certainty that nothing else remains to be understood, the smaller our capacity to truly see becomes.',
+        questionLabel:'THE QUESTION', scroll1Question:'What might you be failing to see?', guardianSignature:'— The Guardian',
+        scroll2Name:'SECOND SCROLL', scroll3Name:'THIRD SCROLL', scrollLocked:'This Scroll has not yet been granted to you.',
+        languagePrompt:'THE GUARDIAN SPEAKS MANY TONGUES', chooseLanguage:'Choose yours',
+        r1Title:'Unlocking Riddle #1', r1q:'“I am not wisdom, but I remain between it and those who seek it. I am not the key, but I decide who may cross the line. In silence, I watch over what must not be given to everyone. Who am I?”',
+        r1a:'A) The Portal itself', r1b:'B) The Guardian', r1c:'C) The Ancient Wind', r1d:'D) The Scroll', break1:'Break the First Seal',
+        r1error:'Incorrect answer. Think of who remains between the seeker and wisdom, deciding who may cross the line.'
+      },
+      pt: {
+        crossed:'Você atravessou a linha', riddlesTitle:'Decifre os Enigmas de PASSARO', riddlesIntro:'Tzipor - Ha-Shomer é o rito de entrada. Decifre o primeiro Enigma e encontre o Guardião. As passagens seguintes serão reveladas somente quando chegar o próximo chamado.',
+        sealed:'Selado', cycle1:'Ciclo I • Desbloqueado', downloads:'downloads realizados', lyrics:'Letra', preview:'Prévia', firstPassage:'A primeira passagem está diante de você. Decifre o Enigma para revelar The Guardian of Hidden Wisdom.', decipher:'Decifrar Enigma', portalSealed:'Portal Selado', secondSealed:'O segundo Portal permanece selado. Aguarde o próximo chamado.', passageSealed:'Esta passagem ainda não foi revelada. Aguarde o próximo chamado.', notGranted:'Passagem ainda não concedida', locked:'🔒 Conteúdo Bloqueado', journeyContinues:'A Jornada Continua', journeyText:'Nem todos os Portais se abrem ao mesmo tempo. Permaneça atento aos sinais e aos próximos chamados de PASSARO.', share:'Compartilhar', copied:'Link Copiado!', support:'Apoiar', enter:'Entrar', advance:'Toque para avançar', firstSeal:'Primeiro Selo Rompido', guardianAllowed:'O Guardião permitiu sua passagem', presents:'PASSARO apresenta',
+        wisdomEyebrow:'SABEDORIA OCULTA', wisdomTitle:'OS PERGAMINHOS DA VISÃO', wisdomIntro:'Há conhecimentos que não podem simplesmente ser entregues. Precisam ser encontrados — e depois vividos.', philosophy:'PASSARO convida você a enxergar além daquilo que lhe foi apresentado como verdade, para que possa escolher conscientemente quem irá se tornar.', seeBeyond:'VER ALÉM', discovered:'DESCOBERTO', sealedScroll:'SELADO', reveal:'REVELAR O PERGAMINHO', scroll1:'PRIMEIRA VISÃO', scroll1Name:'O PERGAMINHO DO OLHAR', scroll1Quote:'“Aquele que acredita enxergar tudo já começou novamente a ficar cego.”', visionLabel:'A VISÃO', scroll1Body:'Enxergar além não significa possuir a verdade. Significa reconhecer que aquilo que vemos pode ser apenas uma parte dela. Quanto maior a certeza de que nada mais existe para ser compreendido, menor se torna nossa capacidade de realmente enxergar.', questionLabel:'A PERGUNTA', scroll1Question:'O que você pode estar deixando de ver?', guardianSignature:'— O Guardião', scroll2Name:'SEGUNDO PERGAMINHO', scroll3Name:'TERCEIRO PERGAMINHO', scrollLocked:'Este Pergaminho ainda não lhe foi concedido.', languagePrompt:'O GUARDIÃO FALA MUITAS LÍNGUAS', chooseLanguage:'Escolha a sua', r1Title:'Enigma de Desbloqueio #1', r1q:'“Não sou a sabedoria, mas permaneço entre ela e aqueles que a procuram. Não sou a chave, mas decido quem pode cruzar a linha. Em silêncio, vigio aquilo que não deve ser entregue a qualquer um. Quem sou eu?”', r1a:'A) O próprio Portal', r1b:'B) O Guardião', r1c:'C) O Vento Antigo', r1d:'D) O Pergaminho', break1:'Quebrar o Primeiro Selo', r1error:'Resposta incorreta. Pense em quem permanece entre o buscador e a sabedoria, decidindo quem pode cruzar a linha.'
+      },
+      ja: {
+        crossed:'あなたは境界線を越えた', riddlesTitle:'PASSAROの謎を解け', riddlesIntro:'Tzipor - Ha-Shomer は入口の儀式。最初の謎を解き、守護者を見つけよ。次の通路は、新たな呼び声が届いた時にのみ明かされる。', sealed:'封印', cycle1:'サイクル I • 解放済み', downloads:'ダウンロード', lyrics:'歌詞', preview:'プレビュー', firstPassage:'最初の通路は目の前にある。謎を解き、The Guardian of Hidden Wisdom を明らかにせよ。', decipher:'謎を解く', portalSealed:'ポータル封印中', secondSealed:'第二のポータルはまだ封印されている。次の呼び声を待て。', passageSealed:'この通路はまだ明かされていない。次の呼び声を待て。', notGranted:'通行はまだ許可されていない', locked:'🔒 コンテンツ封印中', journeyContinues:'旅は続く', journeyText:'すべてのポータルが同時に開くわけではない。兆しとPASSAROからの次の呼び声を見逃すな。', share:'共有', copied:'リンクをコピーしました', support:'支援', enter:'入る', advance:'タップして進む', firstSeal:'第一の封印が破られた', guardianAllowed:'守護者はあなたの通行を許した', presents:'PASSARO presents', wisdomEyebrow:'隠された叡智', wisdomTitle:'視界の巻物', wisdomIntro:'ただ与えられることのできない知がある。それは見つけ、そして生きなければならない。', philosophy:'PASSAROは、真実として与えられたものの向こう側を見つめ、自分が何者になるかを自ら選ぶようあなたを招く。', seeBeyond:'その先を見よ', discovered:'発見済み', sealedScroll:'封印', reveal:'巻物を開く', scroll1:'第一の視界', scroll1Name:'まなざしの巻物', scroll1Quote:'「すべてを見通せると思った者は、すでに再び盲目になり始めている。」', visionLabel:'視界', scroll1Body:'その先を見ることは、真実を所有することではない。自分が見ているものは、その一部にすぎないかもしれないと知ることだ。もう理解すべきものは何もないと確信するほど、本当に見る力は小さくなる。', questionLabel:'問い', scroll1Question:'あなたが見落としているものは何だろう？', guardianSignature:'— 守護者', scroll2Name:'第二の巻物', scroll3Name:'第三の巻物', scrollLocked:'この巻物はまだあなたに授けられていない。', languagePrompt:'守護者は多くの言葉を知っている', chooseLanguage:'あなたの言葉を選べ', r1Title:'解放の謎 #1', r1q:'「私は叡智そのものではない。だが、叡智とそれを求める者の間に立つ。私は鍵ではない。だが、誰が境界線を越えられるかを決める。沈黙の中で、誰にでも渡してはならないものを見守る。私は誰だ？」', r1a:'A) ポータルそのもの', r1b:'B) 守護者', r1c:'C) 古き風', r1d:'D) 巻物', break1:'第一の封印を破る', r1error:'違う。探求者と叡智の間に立ち、誰が境界線を越えられるかを決める存在を考えよ。'
+      },
+      fi: {
+        crossed:'Olet ylittänyt rajan', riddlesTitle:'Ratkaise PASSAROn arvoitukset', riddlesIntro:'Tzipor - Ha-Shomer on sisääntulorituaali. Ratkaise ensimmäinen arvoitus ja löydä Vartija. Seuraavat kulkuväylät paljastuvat vasta uuden kutsun saapuessa.', sealed:'Sinetöity', cycle1:'Sykli I • Avattu', downloads:'latausta', lyrics:'Sanat', preview:'Esikuuntelu', firstPassage:'Ensimmäinen kulkuväylä on edessäsi. Ratkaise arvoitus ja paljasta The Guardian of Hidden Wisdom.', decipher:'Ratkaise arvoitus', portalSealed:'Portaali sinetöity', secondSealed:'Toinen Portaali on yhä sinetöity. Odota seuraavaa kutsua.', passageSealed:'Tätä kulkuväylää ei ole vielä paljastettu. Odota seuraavaa kutsua.', notGranted:'Kulkua ei ole vielä myönnetty', locked:'🔒 Sisältö lukittu', journeyContinues:'Matka jatkuu', journeyText:'Kaikki Portaalit eivät avaudu samaan aikaan. Tarkkaile merkkejä ja PASSAROn seuraavia kutsuja.', share:'Jaa', copied:'Linkki kopioitu!', support:'Tue', enter:'Astu sisään', advance:'Napauta jatkaaksesi', firstSeal:'Ensimmäinen sinetti murrettu', guardianAllowed:'Vartija on sallinut kulkusi', presents:'PASSARO esittää', wisdomEyebrow:'KÄTKETTY VIISAUS', wisdomTitle:'NÄKEMISEN KÄÄRÖT', wisdomIntro:'On tietoa, jota ei voi vain antaa. Se täytyy löytää — ja sitten elää todeksi.', philosophy:'PASSARO kutsuu sinua näkemään pidemmälle kuin se, mikä sinulle on esitetty totuutena, jotta voit tietoisesti valita, kuka sinusta tulee.', seeBeyond:'NÄE PIDEMMÄLLE', discovered:'LÖYDETTY', sealedScroll:'SINETÖITY', reveal:'PALJASTA KÄÄRÖ', scroll1:'ENSIMMÄINEN NÄKEMYS', scroll1Name:'KATSEEN KÄÄRÖ', scroll1Quote:'“Se, joka uskoo näkevänsä kaiken, on jo alkanut sokeutua uudelleen.”', visionLabel:'NÄKEMYS', scroll1Body:'Pidemmälle näkeminen ei tarkoita totuuden omistamista. Se tarkoittaa sen tunnustamista, että näkemämme voi olla vain osa siitä. Mitä varmemmiksi tulemme siitä, ettei mitään muuta ole ymmärrettävänä, sitä pienemmäksi kykymme todella nähdä muuttuu.', questionLabel:'KYSYMYS', scroll1Question:'Mitä saatat jättää näkemättä?', guardianSignature:'— Vartija', scroll2Name:'TOINEN KÄÄRÖ', scroll3Name:'KOLMAS KÄÄRÖ', scrollLocked:'Tätä kääröä ei ole vielä annettu sinulle.', languagePrompt:'VARTIJA PUHUU MONIA KIELIÄ', chooseLanguage:'Valitse omasi', r1Title:'Avausarvoitus #1', r1q:'“En ole viisaus, mutta seison sen ja sitä etsivien välissä. En ole avain, mutta päätän, kuka saa ylittää rajan. Hiljaisuudessa vartioin sitä, mitä ei tule antaa kenelle tahansa. Kuka minä olen?”', r1a:'A) Portaali itse', r1b:'B) Vartija', r1c:'C) Muinainen tuuli', r1d:'D) Käärö', break1:'Murra ensimmäinen sinetti', r1error:'Väärä vastaus. Mieti, kuka seisoo etsijän ja viisauden välissä ja päättää, kuka saa ylittää rajan.'
+      },
+      es: {
+        crossed:'Has cruzado la línea', riddlesTitle:'Descifra los Enigmas de PASSARO', riddlesIntro:'Tzipor - Ha-Shomer es el rito de entrada. Descifra el primer Enigma y encuentra al Guardián. Los siguientes pasajes se revelarán solamente cuando llegue el próximo llamado.', sealed:'Sellado', cycle1:'Ciclo I • Desbloqueado', downloads:'descargas', lyrics:'Letra', preview:'Previa', firstPassage:'El primer pasaje está ante ti. Descifra el Enigma para revelar The Guardian of Hidden Wisdom.', decipher:'Descifrar Enigma', portalSealed:'Portal Sellado', secondSealed:'El segundo Portal permanece sellado. Espera el próximo llamado.', passageSealed:'Este pasaje aún no ha sido revelado. Espera el próximo llamado.', notGranted:'Pasaje aún no concedido', locked:'🔒 Contenido Bloqueado', journeyContinues:'El Viaje Continúa', journeyText:'No todos los Portales se abren al mismo tiempo. Permanece atento a las señales y a los próximos llamados de PASSARO.', share:'Compartir', copied:'¡Enlace copiado!', support:'Apoyar', enter:'Entrar', advance:'Toca para avanzar', firstSeal:'Primer Sello Roto', guardianAllowed:'El Guardián ha permitido tu paso', presents:'PASSARO presenta', wisdomEyebrow:'SABIDURÍA OCULTA', wisdomTitle:'LOS PERGAMINOS DE LA VISIÓN', wisdomIntro:'Hay conocimientos que no pueden simplemente entregarse. Deben ser encontrados — y después vividos.', philosophy:'PASSARO te invita a ver más allá de aquello que te fue presentado como verdad, para que puedas elegir conscientemente quién llegarás a ser.', seeBeyond:'VER MÁS ALLÁ', discovered:'DESCUBIERTO', sealedScroll:'SELLADO', reveal:'REVELAR EL PERGAMINO', scroll1:'PRIMERA VISIÓN', scroll1Name:'EL PERGAMINO DE LA MIRADA', scroll1Quote:'“Quien cree verlo todo ya ha comenzado a quedarse ciego otra vez.”', visionLabel:'LA VISIÓN', scroll1Body:'Ver más allá no significa poseer la verdad. Significa reconocer que aquello que vemos puede ser solo una parte de ella. Cuanto mayor sea nuestra certeza de que no queda nada por comprender, menor será nuestra capacidad de ver realmente.', questionLabel:'LA PREGUNTA', scroll1Question:'¿Qué podrías estar dejando de ver?', guardianSignature:'— El Guardián', scroll2Name:'SEGUNDO PERGAMINO', scroll3Name:'TERCER PERGAMINO', scrollLocked:'Este Pergamino aún no te ha sido concedido.', languagePrompt:'EL GUARDIÁN HABLA MUCHAS LENGUAS', chooseLanguage:'Elige la tuya', r1Title:'Enigma de Desbloqueo #1', r1q:'“No soy la sabiduría, pero permanezco entre ella y quienes la buscan. No soy la llave, pero decido quién puede cruzar la línea. En silencio, vigilo aquello que no debe ser entregado a cualquiera. ¿Quién soy?”', r1a:'A) El propio Portal', r1b:'B) El Guardián', r1c:'C) El Viento Antiguo', r1d:'D) El Pergamino', break1:'Romper el Primer Sello', r1error:'Respuesta incorrecta. Piensa en quien permanece entre el buscador y la sabiduría, decidiendo quién puede cruzar la línea.'
+      }
+    };
+
     function PassaroApp() {
+      const [language, setLanguage] = useState(() => localStorage.getItem('passaro_language') || 'en');
+      const [showLanguageMenu, setShowLanguageMenu] = useState(false);
+      const [activeScroll, setActiveScroll] = useState(null);
+      const t = (key) => (PASSARO_I18N[language] && PASSARO_I18N[language][key]) || PASSARO_I18N.en[key] || key;
+      const changeLanguage = (lang) => {
+        setLanguage(lang);
+        localStorage.setItem('passaro_language', lang);
+        document.documentElement.lang = lang === 'pt' ? 'pt-BR' : lang;
+        setShowLanguageMenu(false);
+      };
+
+      useEffect(() => {
+        document.documentElement.lang = language === 'pt' ? 'pt-BR' : language;
+      }, [language]);
+
       const [currentPlayingId, setCurrentPlayingId] = useState(null);
       const [currentTime, setCurrentTime] = useState(0);
       const [duration, setDuration] = useState(0);
@@ -1019,7 +1083,7 @@ Agora eu posso ver a luz novamente`
           setActiveRiddle(null);
           setShowGuardianCeremony(true);
         } else {
-          setRiddleError("Resposta incorreta. Pense em quem permanece entre o buscador e a sabedoria, decidindo quem pode cruzar a linha.");
+          setRiddleError(t('r1error'));
         }
       };
 
@@ -1086,14 +1150,40 @@ Agora eu posso ver a luz novamente`
               </span>
             </div>
             
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setShowLanguageMenu(v => !v)}
+                  className="text-neutral-200 hover:text-white bg-neutral-800 hover:bg-neutral-700 border border-amber-500/25 px-2.5 py-1.5 rounded-full text-[10px] font-black transition flex items-center gap-1.5"
+                  title={t('languagePrompt')}
+                >
+                  <i data-lucide="languages" className="w-3.5 h-3.5 text-amber-500"></i>
+                  <span>{PASSARO_LANGS[language].label}</span>
+                  <i data-lucide="chevron-down" className="w-3 h-3 text-neutral-500"></i>
+                </button>
+                {showLanguageMenu && (
+                  <div className="absolute right-0 top-10 w-52 bg-neutral-950 border border-neutral-700 rounded-2xl shadow-2xl overflow-hidden z-[90]">
+                    <div className="px-4 py-3 border-b border-neutral-800">
+                      <div className="text-[9px] text-amber-500 font-black tracking-[0.16em] uppercase">{t('languagePrompt')}</div>
+                      <div className="text-[10px] text-neutral-500 mt-1">{t('chooseLanguage')}</div>
+                    </div>
+                    {Object.entries(PASSARO_LANGS).map(([code, info]) => (
+                      <button key={code} type="button" onClick={() => changeLanguage(code)} className={`w-full px-4 py-2.5 flex items-center justify-between text-xs transition ${language === code ? 'bg-amber-500/10 text-amber-300' : 'text-neutral-300 hover:bg-neutral-900'}`}>
+                        <span className="flex items-center gap-2"><span>{info.flag}</span><span>{info.name}</span></span>
+                        {language === code && <i data-lucide="check" className="w-3.5 h-3.5 text-amber-500"></i>}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
               <button 
                 onClick={handleShareApp} 
                 className="text-neutral-300 hover:text-white bg-neutral-800 hover:bg-neutral-700 border border-neutral-700/60 px-3 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1.5"
                 title="Compartilhar Web App"
               >
                 <i data-lucide={copiedShare ? "check" : "share-2"} className="w-3.5 h-3.5 text-amber-500"></i>
-                <span className="hidden sm:inline">{copiedShare ? 'Link Copiado!' : 'Compartilhar'}</span>
+                <span className="hidden sm:inline">{copiedShare ? t('copied') : t('share')}</span>
               </button>
 
               {/* Instagram com SVG Garantido */}
@@ -1120,10 +1210,10 @@ Agora eu posso ver a luz novamente`
           {/* Decifre os Enigmas Ocultos */}
           <section className="max-w-5xl mx-auto my-12 px-4 space-y-6">
             <div className="text-center space-y-2">
-              <div className="text-[10px] uppercase tracking-[0.3em] font-bold text-amber-500 mb-2">Você atravessou a linha</div>
-              <h1 className="text-3xl font-black uppercase tracking-tight text-white">Decifre os Enigmas de PASSARO</h1>
+              <div className="text-[10px] uppercase tracking-[0.3em] font-bold text-amber-500 mb-2">{t('crossed')}</div>
+              <h1 className="text-3xl font-black uppercase tracking-tight text-white">{t('riddlesTitle')}</h1>
               <p className="text-xs text-neutral-400 max-w-xl mx-auto leading-relaxed">
-                <strong className="text-amber-500">Tzipor - Ha-Shomer</strong> é o rito de entrada. Decifre o primeiro Enigma e encontre o Guardião. As passagens seguintes serão reveladas somente quando chegar o próximo chamado.
+                <strong className="text-amber-500">Tzipor - Ha-Shomer</strong> {t('riddlesIntro').replace('Tzipor - Ha-Shomer ', '')}
               </p>
             </div>
 
@@ -1146,7 +1236,7 @@ Agora eu posso ver a luz novamente`
                     {!isUnlocked && (
                       <div className="absolute top-3 right-3 z-10 bg-amber-500/20 border border-amber-500/40 backdrop-blur-md px-2.5 py-1 rounded-full flex items-center gap-1 shadow-lg">
                         <i data-lucide="lock" className="w-3.5 h-3.5 text-amber-400"></i>
-                        <span className="text-[10px] font-bold text-amber-300 uppercase">Selado</span>
+                        <span className="text-[10px] font-bold text-amber-300 uppercase">{t('sealed')}</span>
                       </div>
                     )}
 
@@ -1163,7 +1253,7 @@ Agora eu posso ver a luz novamente`
                       {track.id === 'guardian' && isUnlocked && (
                         <div className="mx-4 mt-3 flex items-center justify-center gap-2 border border-amber-500/30 bg-amber-500/10 text-amber-300 rounded-xl px-3 py-2">
                           <i data-lucide="unlock-keyhole" className="w-3.5 h-3.5"></i>
-                          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.16em]">Ciclo I • Desbloqueado</span>
+                          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.16em]">{t('cycle1')}</span>
                         </div>
                       )}
 
@@ -1172,7 +1262,7 @@ Agora eu posso ver a luz novamente`
                         {isUnlocked && (
                           <div className="flex items-center gap-1.5 text-neutral-400 text-[11px] font-mono border-b border-neutral-800 pb-2">
                             <i data-lucide="download" className="w-3.5 h-3.5 text-amber-500"></i>
-                            <span className="font-bold text-neutral-300">{count.toLocaleString('pt-BR')}</span> downloads realizados
+                            <span className="font-bold text-neutral-300">{count.toLocaleString(language === 'pt' ? 'pt-BR' : 'en-US')}</span> {t('downloads')}
                           </div>
                         )}
 
@@ -1189,7 +1279,7 @@ Agora eu posso ver a luz novamente`
                               className="bg-neutral-800 hover:bg-neutral-700 text-neutral-300 p-2 rounded-xl transition flex items-center gap-1.5 border border-neutral-700/60 flex-shrink-0"
                             >
                               <i data-lucide="file-text" className="w-4 h-4 text-amber-500"></i>
-                              <span className="text-[10px] font-bold">Letra</span>
+                              <span className="text-[10px] font-bold">{t('lyrics')}</span>
                             </button>
                           )}
                         </div>
@@ -1227,7 +1317,7 @@ Agora eu posso ver a luz novamente`
                                 
                                 <div className="flex justify-between text-[10px] font-mono text-neutral-400">
                                   <span>{isThisPlaying ? formatTime(currentTime) : "0:00"}</span>
-                                  <span>{isThisPlaying && duration ? formatTime(duration) : "Prévia"}</span>
+                                  <span>{isThisPlaying && duration ? formatTime(duration) : t('preview')}</span>
                                 </div>
                               </div>
                             </div>
@@ -1237,29 +1327,29 @@ Agora eu posso ver a luz novamente`
                             {track.id === 'guardian' && releaseAccess.guardianRiddle ? (
                               <>
                                 <p className="text-xs text-amber-200/80 font-medium leading-relaxed">
-                                  A primeira passagem está diante de você. Decifre o Enigma para revelar The Guardian of Hidden Wisdom.
+                                  {t('firstPassage')}
                                 </p>
                                 <button
                                   onClick={() => setActiveRiddle('riddle1')}
                                   className="w-full bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-black font-extrabold text-xs py-2.5 rounded-xl transition shadow-lg shadow-amber-950/50 flex items-center justify-center gap-2 uppercase tracking-wider"
                                 >
                                   <i data-lucide="key" className="w-4 h-4"></i>
-                                  <span>Decifrar Enigma</span>
+                                  <span>{t('decipher')}</span>
                                 </button>
                               </>
                             ) : (
                               <>
                                 <div className="flex items-center justify-center gap-2 text-amber-400">
                                   <i data-lucide="lock-keyhole" className="w-4 h-4"></i>
-                                  <span className="text-[10px] font-black uppercase tracking-[0.18em]">Portal Selado</span>
+                                  <span className="text-[10px] font-black uppercase tracking-[0.18em]">{t('portalSealed')}</span>
                                 </div>
                                 <p className="text-xs text-neutral-400 font-medium leading-relaxed">
                                   {track.id === 'raining_tears'
-                                    ? "O segundo Portal permanece selado. Aguarde o próximo chamado."
-                                    : "Esta passagem ainda não foi revelada. Aguarde o próximo chamado."}
+                                    ? t('secondSealed')
+                                    : t('passageSealed')}
                                 </p>
                                 <div className="w-full border border-neutral-800 bg-neutral-900/60 text-neutral-600 font-bold text-[10px] py-2.5 rounded-xl uppercase tracking-wider cursor-not-allowed">
-                                  Passagem ainda não concedida
+                                  {t('notGranted')}
                                 </div>
                               </>
                             )}
@@ -1284,7 +1374,7 @@ Agora eu posso ver a luz novamente`
                         </a>
                       ) : (
                         <div className="py-2.5 text-center text-xs text-neutral-600 font-mono italic">
-                          🔒 Conteúdo Bloqueado
+                          {t('locked')}
                         </div>
                       )}
 
@@ -1304,11 +1394,49 @@ Agora eu posso ver a luz novamente`
             <div className="max-w-2xl mx-auto text-center bg-neutral-900/60 border border-neutral-800 rounded-2xl px-5 py-4">
               <div className="flex items-center justify-center gap-2 text-amber-500 mb-1.5">
                 <i data-lucide="hourglass" className="w-4 h-4"></i>
-                <span className="text-[10px] font-black uppercase tracking-[0.2em]">A Jornada Continua</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.2em]">{t('journeyContinues')}</span>
               </div>
               <p className="text-xs text-neutral-400 leading-relaxed">
-                Nem todos os Portais se abrem ao mesmo tempo. Permaneça atento aos sinais e aos próximos chamados de PASSARO.
+                {t('journeyText')}
               </p>
+            </div>
+          </section>
+
+          {/* HIDDEN WISDOM — SCROLLS OF VISION */}
+          <section id="wisdom" className="max-w-5xl mx-auto my-16 px-4">
+            <div className="relative overflow-hidden rounded-3xl border border-amber-500/20 bg-gradient-to-b from-neutral-900 via-neutral-950 to-black shadow-2xl">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(245,158,11,0.10),transparent_42%)] pointer-events-none"></div>
+              <div className="relative px-6 py-10 md:px-10 md:py-12">
+                <div className="text-center max-w-3xl mx-auto">
+                  <div className="text-[10px] uppercase tracking-[0.38em] font-black text-amber-500">{t('wisdomEyebrow')}</div>
+                  <h2 className="mt-3 text-3xl md:text-4xl font-black tracking-tight text-white">{t('wisdomTitle')}</h2>
+                  <p className="mt-3 text-xs md:text-sm text-neutral-400 leading-relaxed">{t('wisdomIntro')}</p>
+                  <div className="mt-6 mx-auto max-w-2xl border-y border-amber-500/15 py-5 text-sm md:text-base text-amber-100/85 italic leading-relaxed">
+                    “{t('philosophy')}”
+                  </div>
+                  <div className="mt-3 text-[10px] font-black tracking-[0.35em] text-amber-500">PASSARO • {t('seeBeyond')}</div>
+                </div>
+
+                <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <button type="button" disabled={!unlockedTracks.guardian} onClick={() => unlockedTracks.guardian && setActiveScroll(1)} className={`group text-left rounded-2xl border p-5 transition min-h-[190px] ${unlockedTracks.guardian ? 'border-amber-500/35 bg-amber-500/[0.06] hover:border-amber-400 hover:bg-amber-500/[0.10]' : 'border-neutral-800 bg-neutral-950/70 opacity-60 cursor-not-allowed'}`}>
+                    <div className="flex items-start justify-between">
+                      <div className="w-11 h-11 rounded-full border border-amber-500/30 flex items-center justify-center text-amber-400 font-serif text-xl">I</div>
+                      <span className={`text-[9px] font-black tracking-[0.16em] uppercase ${unlockedTracks.guardian ? 'text-amber-400' : 'text-neutral-600'}`}>{unlockedTracks.guardian ? t('discovered') : t('sealedScroll')}</span>
+                    </div>
+                    <div className="mt-7 text-xs font-black tracking-[0.18em] text-white uppercase">{t('scroll1Name')}</div>
+                    <div className="mt-2 text-[11px] text-neutral-500 leading-relaxed">{unlockedTracks.guardian ? t('scroll1Quote') : t('scrollLocked')}</div>
+                    {unlockedTracks.guardian && <div className="mt-4 text-[10px] text-amber-500 font-black uppercase tracking-wider flex items-center gap-1.5">{t('reveal')} <i data-lucide="scroll-text" className="w-3.5 h-3.5"></i></div>}
+                  </button>
+
+                  {[2,3].map(n => (
+                    <div key={n} className="rounded-2xl border border-neutral-800 bg-neutral-950/70 p-5 min-h-[190px] opacity-55">
+                      <div className="flex items-start justify-between"><div className="w-11 h-11 rounded-full border border-neutral-700 flex items-center justify-center text-neutral-600 font-serif text-xl">{n === 2 ? 'II' : 'III'}</div><span className="text-[9px] font-black tracking-[0.16em] uppercase text-neutral-600">{t('sealedScroll')}</span></div>
+                      <div className="mt-7 text-xs font-black tracking-[0.18em] text-neutral-500 uppercase">{n === 2 ? t('scroll2Name') : t('scroll3Name')}</div>
+                      <div className="mt-2 text-[11px] text-neutral-600 leading-relaxed">{t('scrollLocked')}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </section>
 
@@ -1644,6 +1772,33 @@ Agora eu posso ver a luz novamente`
             </div>
           )}
 
+          {/* MODAL — FIRST SCROLL OF VISION */}
+          {activeScroll === 1 && unlockedTracks.guardian && (
+            <div className="fixed inset-0 z-[120] bg-black/90 backdrop-blur-lg flex items-center justify-center p-4" onClick={() => setActiveScroll(null)}>
+              <div className="relative w-full max-w-2xl overflow-hidden rounded-3xl border border-amber-500/35 bg-gradient-to-b from-[#17130d] via-neutral-950 to-black shadow-[0_0_80px_rgba(245,158,11,0.12)]" onClick={(e) => e.stopPropagation()}>
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(245,158,11,.13),transparent_45%)] pointer-events-none"></div>
+                <button type="button" onClick={() => setActiveScroll(null)} className="absolute top-4 right-4 z-10 text-neutral-500 hover:text-white w-9 h-9 rounded-full border border-neutral-800 bg-black/50">✕</button>
+                <div className="relative p-7 md:p-10 text-center">
+                  <div className="mx-auto w-16 h-16 rounded-full border border-amber-500/35 bg-amber-500/[0.06] flex items-center justify-center font-serif text-3xl text-amber-400">I</div>
+                  <div className="mt-5 text-[9px] uppercase tracking-[0.38em] font-black text-amber-500">{t('scroll1')}</div>
+                  <h3 className="mt-2 text-xl md:text-2xl font-black text-white uppercase tracking-wide">{t('scroll1Name')}</h3>
+                  <div className="my-7 h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent"></div>
+                  <blockquote className="font-serif text-xl md:text-2xl leading-relaxed text-amber-100">{t('scroll1Quote')}</blockquote>
+                  <div className="mt-3 text-xs text-amber-600 font-semibold">{t('guardianSignature')}</div>
+                  <div className="mt-8 text-left rounded-2xl border border-neutral-800 bg-black/35 p-5 md:p-6">
+                    <div className="text-[9px] uppercase tracking-[0.25em] font-black text-amber-500">{t('visionLabel')}</div>
+                    <p className="mt-3 text-sm text-neutral-300 leading-7">{t('scroll1Body')}</p>
+                  </div>
+                  <div className="mt-5 rounded-2xl border border-amber-500/20 bg-amber-500/[0.05] p-5">
+                    <div className="text-[9px] uppercase tracking-[0.25em] font-black text-amber-500">{t('questionLabel')}</div>
+                    <p className="mt-2 text-base md:text-lg font-semibold text-white">{t('scroll1Question')}</p>
+                  </div>
+                  <div className="mt-7 text-[9px] tracking-[0.34em] font-black text-neutral-600">PASSARO • {t('seeBeyond')}</div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* MODAL ENIGMA #1 */}
           {/* CERIMÔNIA — PRIMEIRO SELO ROMPIDO */}
           {showGuardianCeremony && (
@@ -1695,17 +1850,17 @@ Agora eu posso ver a luz novamente`
 
                 <div className={`mt-7 transition-all duration-1000 ${guardianCeremonyStage >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
                   <div className="text-[10px] md:text-xs font-black uppercase tracking-[0.35em] text-amber-500">
-                    Primeiro Selo Rompido
+                    {t('firstSeal')}
                   </div>
                   <h2 className="mt-3 text-2xl md:text-4xl font-black uppercase tracking-tight text-white">
-                    O Guardião permitiu sua passagem
+                    {t('guardianAllowed')}
                   </h2>
                 </div>
 
                 <div className={`mt-7 transition-all duration-1000 ${guardianCeremonyStage >= 3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}>
                   <div className="h-px w-24 mx-auto bg-gradient-to-r from-transparent via-amber-500 to-transparent mb-6"></div>
                   <div className="text-neutral-500 text-[10px] uppercase tracking-[0.28em] font-bold mb-2">
-                    PASSARO apresenta
+                    {t('presents')}
                   </div>
                   <div className="text-xl md:text-3xl text-amber-300 font-black tracking-tight">
                     THE GUARDIAN OF HIDDEN WISDOM
@@ -1721,7 +1876,7 @@ Agora eu posso ver a luz novamente`
                     onClick={enterGuardianCycle}
                     className="group inline-flex items-center justify-center gap-3 bg-gradient-to-r from-amber-600 via-amber-400 to-amber-600 hover:from-amber-500 hover:via-amber-300 hover:to-amber-500 text-black font-black uppercase tracking-[0.18em] text-xs md:text-sm px-8 py-4 rounded-full shadow-[0_0_35px_rgba(245,158,11,0.25)] transition"
                   >
-                    <span>Entrar</span>
+                    <span>{t('enter')}</span>
                     <i data-lucide="arrow-down" className="w-4 h-4 group-hover:translate-y-1 transition-transform"></i>
                   </button>
                 </div>
@@ -1732,7 +1887,7 @@ Agora eu posso ver a luz novamente`
                     onClick={() => setGuardianCeremonyStage(4)}
                     className="mt-7 text-[9px] uppercase tracking-[0.22em] text-neutral-700 hover:text-neutral-400 transition"
                   >
-                    Toque para avançar
+                    {t('advance')}
                   </button>
                 )}
               </div>
@@ -1744,21 +1899,21 @@ Agora eu posso ver a luz novamente`
               <div className="bg-neutral-900 border border-amber-500/40 w-full max-w-lg rounded-2xl p-6 space-y-5 shadow-2xl">
                 <div className="flex justify-between items-center border-b border-neutral-800 pb-3">
                   <span className="text-xs font-bold uppercase text-amber-500 flex items-center gap-2">
-                    <i data-lucide="shield-alert" className="w-4 h-4"></i> Enigma de Desbloqueio #1
+                    <i data-lucide="shield-alert" className="w-4 h-4"></i> {t('r1Title')}
                   </span>
                   <button onClick={closeRiddleModal} className="text-neutral-400 hover:text-white">✕</button>
                 </div>
                 {!riddleSuccessText ? (
                   <form onSubmit={handleSolveRiddle1} className="space-y-4">
                     <p className="text-sm font-semibold text-neutral-200 leading-relaxed">
-                      "Não sou a sabedoria, mas permaneço entre ela e aqueles que a procuram. Não sou a chave, mas decido quem pode cruzar a linha. Em silêncio, vigio aquilo que não deve ser entregue a qualquer um. Quem sou eu?"
+                      {t('r1q')}
                     </p>
                     <div className="space-y-2">
                       {[
-                        { id: 'A', text: 'A) O próprio Portal' },
-                        { id: 'B', text: 'B) O Guardião' },
-                        { id: 'C', text: 'C) O Vento Antigo' },
-                        { id: 'D', text: 'D) O Pergaminho' }
+                        { id: 'A', text: t('r1a') },
+                        { id: 'B', text: t('r1b') },
+                        { id: 'C', text: t('r1c') },
+                        { id: 'D', text: t('r1d') }
                       ].map((opt) => (
                         <label key={opt.id} className={`flex items-center gap-3 p-3 rounded-xl border text-xs cursor-pointer transition ${selectedOptionRiddle1 === opt.id ? 'bg-amber-950/60 border-amber-500 text-white font-bold' : 'bg-neutral-950 border-neutral-800 text-neutral-300 hover:border-neutral-700'}`}>
                           <input type="radio" name="riddle1" value={opt.id} checked={selectedOptionRiddle1 === opt.id} onChange={(e) => setSelectedOptionRiddle1(e.target.value)} className="accent-amber-500" />
@@ -1768,7 +1923,7 @@ Agora eu posso ver a luz novamente`
                     </div>
                     {riddleError && <p className="text-xs text-red-500 font-bold">{riddleError}</p>}
                     <button type="submit" disabled={!selectedOptionRiddle1} className="w-full bg-amber-500 hover:bg-amber-400 text-black font-extrabold py-3 rounded-xl text-xs uppercase tracking-wider transition disabled:opacity-50">
-                      Quebrar o Primeiro Selo
+                      {t('break1')}
                     </button>
                   </form>
                 ) : (
