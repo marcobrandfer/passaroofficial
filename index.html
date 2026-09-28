@@ -1779,26 +1779,26 @@ Agora eu posso ver a luz novamente`
                 className="relative w-full max-w-2xl overflow-hidden rounded-3xl border border-amber-500/45 bg-[#17130d] shadow-[0_0_90px_rgba(245,158,11,0.16)]"
                 onClick={(e) => e.stopPropagation()}
               >
-                {/* Pergaminho oficial — mantenha o arquivo em /images/perg
-.jpg */}
-                <div
-                  className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-[1.02]"
-                  style={{ backgroundImage: "url('./images/pergaminho.jpg')" }}
-                ></div>
-                {/* Véus de contraste: preservam a arte e garantem leitura em qualquer tela */}
-                <div className="absolute inset-0 bg-black/62 pointer-events-none"></div>
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(120,74,18,.08),rgba(0,0,0,.42)_78%)] pointer-events-none"></div>
-                <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-black/45 to-transparent pointer-events-none"></div>
-                <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/55 to-transparent pointer-events-none"></div>
-
                 <button type="button" onClick={() => setActiveScroll(null)} className="absolute top-4 right-4 z-20 text-amber-100/70 hover:text-white w-9 h-9 rounded-full border border-amber-300/20 bg-black/55 backdrop-blur-sm">✕</button>
                 <div className="relative z-10 p-7 md:p-10 text-center">
                   <div className="mx-auto w-16 h-16 rounded-full border border-amber-500/35 bg-amber-500/[0.06] flex items-center justify-center font-serif text-3xl text-amber-400">I</div>
                   <div className="mt-5 text-[9px] uppercase tracking-[0.38em] font-black text-amber-500">{t('scroll1')}</div>
                   <h3 className="mt-2 text-xl md:text-2xl font-black text-white uppercase tracking-wide">{t('scroll1Name')}</h3>
                   <div className="my-7 h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent"></div>
-                  <blockquote className="font-serif text-xl md:text-2xl leading-relaxed text-amber-100">{t('scroll1Quote')}</blockquote>
-                  <div className="mt-3 text-xs text-amber-600 font-semibold">{t('guardianSignature')}</div>
+
+                  {/* A arte do pergaminho pertence somente à mensagem revelada pelo Guardião */}
+                  <div
+                    className="relative overflow-hidden rounded-2xl border border-amber-500/35 bg-[#21180d] bg-cover bg-center bg-no-repeat px-6 py-10 md:px-10 md:py-12 shadow-[inset_0_0_55px_rgba(0,0,0,.42),0_0_35px_rgba(245,158,11,.08)]"
+                    style={{ backgroundImage: "url('./images/perg
+.jpg')" }}
+                  >
+                    <div className="absolute inset-0 bg-black/48 pointer-events-none"></div>
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(76,45,12,.08),rgba(0,0,0,.30)_85%)] pointer-events-none"></div>
+                    <div className="relative z-10">
+                      <blockquote className="font-serif text-xl md:text-2xl leading-relaxed text-amber-50 drop-shadow-lg">{t('scroll1Quote')}</blockquote>
+                      <div className="mt-4 text-xs text-amber-300 font-semibold drop-shadow">{t('guardianSignature')}</div>
+                    </div>
+                  </div>
                   <div className="mt-8 text-left rounded-2xl border border-neutral-800 bg-black/35 p-5 md:p-6">
                     <div className="text-[9px] uppercase tracking-[0.25em] font-black text-amber-500">{t('visionLabel')}</div>
                     <p className="mt-3 text-sm text-neutral-300 leading-7">{t('scroll1Body')}</p>
