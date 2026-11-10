@@ -1,5 +1,5 @@
-﻿<!DOCTYPE html>
-<html lang="pt-BR">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
 
@@ -8,7 +8,8 @@
     content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   >
 
-  <title>PASSARO — O Portal</title>
+  <title>PASSARO — The Portal</title>
+  <meta name="description" content="The PASSARO Portal. Present the Key entrusted to you and discover what awaits beyond the threshold.">
 
   <style>
     * {
@@ -342,7 +343,7 @@
 
 
     /* ======================================================
-       TELA 2 — CHAVE RECONHECIDA
+       TELA 2 — KEY RECOGNIZED
     ====================================================== */
 
     #recognitionScreen {
@@ -634,12 +635,12 @@
       >
 
         <h1 class="portal-title">
-          PORTAL FECHADO
+          PORTAL SEALED
         </h1>
 
 
         <p class="portal-subtitle">
-          Apresente a Chave que lhe foi confiada.
+          Present the Key entrusted to you.
         </p>
 
 
@@ -647,7 +648,7 @@
           type="text"
           id="portalKey"
           class="key-input"
-          placeholder="CHAVE DO PORTAL"
+          placeholder="PORTAL KEY"
           autocomplete="off"
           autocapitalize="characters"
           spellcheck="false"
@@ -660,7 +661,7 @@
           class="unlock-button"
           type="button"
         >
-          DESBLOQUEAR O PORTAL
+          UNLOCK THE PORTAL
         </button>
 
 
@@ -680,13 +681,13 @@
 
 
   <!-- =====================================================
-       TELA 2 — CHAVE RECONHECIDA
+       TELA 2 — KEY RECOGNIZED
   ====================================================== -->
 
   <section id="recognitionScreen">
 
     <div class="recognition-text">
-      CHAVE RECONHECIDA
+      KEY RECOGNIZED
     </div>
 
   </section>
@@ -710,7 +711,7 @@
         type="video/mp4"
       >
 
-      Seu navegador não suporta reprodução de vídeo.
+      Your browser does not support video playback.
 
     </video>
 
@@ -732,12 +733,12 @@
 
 
       <h2 class="final-title">
-        O PORTAL ESTÁ ABERTO
+        THE PORTAL IS OPEN
       </h2>
 
 
       <p class="final-text">
-        O Guardião permitiu sua passagem.
+        The Guardian has granted you passage.
       </p>
 
 
@@ -746,7 +747,7 @@
         class="cross-button"
         type="button"
       >
-        ATRAVESSAR
+        CROSS THE THRESHOLD
       </button>
 
     </div>
@@ -828,7 +829,7 @@
     function invalidKey() {
 
       message.innerHTML =
-        "A CHAVE NÃO FOI RECONHECIDA.<br>O Portal permanece selado.";
+        "THE KEY WAS NOT RECOGNIZED.<br>The Portal remains sealed.";
 
 
       portalBox.classList.remove("error");
@@ -899,7 +900,7 @@
 
 
       /*
-        CHAVE RECONHECIDA
+        KEY RECOGNIZED
       */
 
       recognitionScreen.style.display = "flex";
@@ -1020,7 +1021,7 @@
 
 
     /* =====================================================
-       BOTÃO ATRAVESSAR
+       BOTÃO CROSS THE THRESHOLD
     ====================================================== */
 
     crossButton.addEventListener(
