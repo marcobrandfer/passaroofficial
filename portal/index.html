@@ -566,6 +566,49 @@
 
 
     /* ======================================================
+       TEMPORAL GATE — OPENS NOVEMBER 11, 2026 AT 11:11 AM
+    ====================================================== */
+
+    #countdownGate {
+      display: none;
+      text-align: center;
+    }
+
+    .countdown-label {
+      margin: 0 auto 18px;
+      color: var(--gold-light);
+      font-size: clamp(1.15rem, 4.8vw, 1.55rem);
+      letter-spacing: 0.12em;
+      line-height: 1.4;
+    }
+
+    .countdown-copy {
+      margin-bottom: 22px;
+      color: rgba(255,255,255,.78);
+      font-size: .96rem;
+      line-height: 1.6;
+    }
+
+    #countdownTimer {
+      margin: 8px 0 18px;
+      color: #f1d28c;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: clamp(1.7rem, 7vw, 2.35rem);
+      font-weight: 700;
+      letter-spacing: .09em;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 24px rgba(214,173,91,.22);
+    }
+
+    .countdown-timezone {
+      color: rgba(255,255,255,.48);
+      font: .72rem Arial, Helvetica, sans-serif;
+      letter-spacing: .1em;
+    }
+
+    .access-panel { display: none; }
+
+    /* ======================================================
        MOBILE
     ====================================================== */
 
@@ -634,43 +677,21 @@
         id="portalBox"
       >
 
-        <h1 class="portal-title">
-          PORTAL SEALED
-        </h1>
+        <div id="countdownGate">
+          <h1 class="countdown-label">THE PORTAL IS SEALED</h1>
+          <p class="countdown-copy">The Guardian will open the gates at the appointed time.<br>Return when the threshold calls.</p>
+          <div id="countdownTimer" aria-live="off">--:--:--</div>
+          <p class="countdown-timezone">NOVEMBER 11, 2026 · 11:11 AM · BRASILIA TIME</p>
+        </div>
 
-
-        <p class="portal-subtitle">
-          Present the Key entrusted to you.
-        </p>
-
-
-        <input
-          type="text"
-          id="portalKey"
-          class="key-input"
-          placeholder="PORTAL KEY"
-          autocomplete="off"
-          autocapitalize="characters"
-          spellcheck="false"
-          maxlength="30"
-        >
-
-
-        <button
-          id="unlockButton"
-          class="unlock-button"
-          type="button"
-        >
-          UNLOCK THE PORTAL
-        </button>
-
-
-        <div id="message"></div>
-
-
-        <p class="portal-phrase">
-          Only the worthy may cross the line.
-        </p>
+        <div id="accessPanel" class="access-panel">
+          <h1 class="portal-title">PORTAL OPEN</h1>
+          <p class="portal-subtitle">Present the Key entrusted to you.</p>
+          <input type="text" id="portalKey" class="key-input" placeholder="PORTAL KEY" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="30">
+          <button id="unlockButton" class="unlock-button" type="button">UNLOCK THE PORTAL</button>
+          <div id="message"></div>
+          <p class="portal-phrase">Only the worthy may cross the line.</p>
+        </div>
 
       </div>
 
@@ -809,6 +830,50 @@
 
 
     /* =====================================================
+       TEMPORAL GATE — BRASILIA TIME (UTC-03:00)
+       Opens on 2026-11-11 at 11:11 AM.
+    ====================================================== */
+
+    const PORTAL_OPENS_AT = new Date("2026-11-11T11:11:00-03:00").getTime();
+    const countdownGate = document.getElementById("countdownGate");
+    const countdownTimer = document.getElementById("countdownTimer");
+    const accessPanel = document.getElementById("accessPanel");
+    let countdownInterval = null;
+
+    function updatePortalGate() {
+      const remaining = PORTAL_OPENS_AT - Date.now();
+
+      if (remaining <= 0) {
+        countdownGate.style.display = "none";
+        accessPanel.style.display = "block";
+        if (countdownInterval !== null) {
+          clearInterval(countdownInterval);
+          countdownInterval = null;
+        }
+        return;
+      }
+
+      countdownGate.style.display = "block";
+      accessPanel.style.display = "none";
+
+      const totalSeconds = Math.floor(remaining / 1000);
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      const pad = value => String(value).padStart(2, "0");
+      countdownTimer.textContent = days > 0
+        ? `${days}d ${pad(hours)}:${pad(minutes)}:${pad(seconds)}`
+        : `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+    }
+
+    updatePortalGate();
+    if (Date.now() < PORTAL_OPENS_AT) {
+      countdownInterval = setInterval(updatePortalGate, 1000);
+    }
+
+
+    /* =====================================================
        NORMALIZAÇÃO DA CHAVE
     ====================================================== */
 
@@ -852,6 +917,11 @@
 
     async function unlockPortal() {
 
+      // Extra client-side check: do not accept a key before the scheduled opening.
+      if (Date.now() < PORTAL_OPENS_AT) {
+        updatePortalGate();
+        return;
+      }
 
       const typedKey =
         normalizeKey(portalKey.value);
